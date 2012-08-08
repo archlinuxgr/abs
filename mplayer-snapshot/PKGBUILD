@@ -1,0 +1,19 @@
+# Contributor: sickhate <vivid@tux-linux.net>
+pkgname=mplayer-snapshot
+pkgver=0.3
+pkgrel=1
+pkgdesc="Creating one big thumbnail from movie using mplayer"
+arch=('i686' 'x86_64')
+url="http://www.gnomefiles.org/app.php/mplayer-snapshot"
+license=('GPL')
+depends=('mplayer' 'cairo' 'gtk' 'gdk-pixbuf')
+source=('http://ssh.student.utcluj.ro/~alextud/mplayer-snapshot-0.3.tar.gz')
+md5sums=('f72d6df12df7da6a21ef352f3b7a38a1')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  ./configure --prefix=/usr
+  make
+  make DESTDIR="$pkgdir" install
+}
+

@@ -1,0 +1,7 @@
+--- CMakeLists.txt	2009-07-06 01:00:25.000000000 +0300
++++ CMakeLists.txt2	2009-07-07 19:38:59.000000000 +0300
+@@ -19,4 +19,3 @@
+ 
+ install(TARGETS plasma_applet_devicemanager DESTINATION ${PLUGIN_INSTALL_DIR})
+ install(FILES plasma-applet-devicemanager.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+-install(FILES test-predicate-openinwindow.desktop DESTINATION ${DATA_INSTALL_DIR}/solid/actions )

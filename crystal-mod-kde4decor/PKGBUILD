@@ -1,0 +1,22 @@
+#Contributor: ranger @ adslgr.com
+pkgname=crystal-mod-kde4decor
+realname=crystal
+pkgver=2.0.3
+pkgrel=3
+pkgdesc="Crystal-Deko-Theme 2.0.3 with some modifications in Buttons and "steel""
+groups=('adslgr-kde4decor' 'adslgr-kde4-eyecandy')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php?content=102787"
+depends=('kdebase-workspace>=4.3.0')
+conflicts=('crystal-kde4decor')
+makedepends=('cmake' 'automoc4' 'gcc')
+source=("http://www.kde-look.org/CONTENT/content-files/102787-${realname}-${pkgver}-mod.tar.gz")
+license=('GPL')
+md5sums=('35f6e787bd069dac1dc1dd9963f5648d')
+
+build() {
+        cd $srcdir/${realname}-${pkgver}-mod
+        cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .
+        make
+        make DESTDIR=$pkgdir install
+}

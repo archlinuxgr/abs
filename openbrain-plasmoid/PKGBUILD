@@ -1,0 +1,22 @@
+# Contributor: ranger @ adslgr.com
+pkgname=openbrain-plasmoid
+realname=openbrain
+pkgver=0.0.2.6.4
+pkgrel=3
+pkgdesc="An anrtificial intelligence desktop assistant"
+groups=('adslgr-plasmoids')
+arch=('i686' 'x86_64')
+url="http://openbrain.sourceforge.net"
+depends=('kdebase-workspace>=4.3.0')
+makedepends=('cmake' 'automoc4' 'gcc')
+source=("http://voxel.dl.sourceforge.net/sourceforge/openbrain/openbrain-${pkgver}.tar.bz2")
+license=('GPL')
+md5sums=('17a0a995a0e4f05cb47342e5b9e2aafd')
+
+
+build() {
+  cd $srcdir/${realname}
+	cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE
+	make VERBOSE=1
+        make DESTDIR=$pkgdir install
+}

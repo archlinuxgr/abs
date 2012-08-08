@@ -1,0 +1,20 @@
+#Contributor: ranger @ adslgr.com
+pkgname=lzfy-kdm
+realname=lzfy-kde4
+pkgver=1.0
+pkgrel=2
+pkgdesc="Glassified KDM theme"
+arch=('any')
+groups=('adslgr-kdm4' 'adslgr-kde4-eyecandy')
+url="http://kde-look.org:80/content/show.php/lzfy?content=90432"
+license=('LGPL')
+options=('force')
+source=("http://www.kde-look.org/CONTENT/content-files/90432-${realname}.tar.gz")
+md5sums=('8efdd38a4e93fbc7a34263826502c2c2')
+
+build() {
+  cd ${srcdir}/
+  mkdir -p $pkgdir/usr/share/apps/kdm/themes
+  mv ${realname}/ $pkgdir/usr/share/apps/kdm/themes
+}
+

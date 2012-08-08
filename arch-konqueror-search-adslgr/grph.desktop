@@ -1,0 +1,8 @@
+[Desktop Entry]
+Charset=ISO 8859-7
+Hidden=false
+Keys=grph
+Name=GreekPhones
+Query=http://www.greekphones.info/index.php?phone=\\{@}&ie=ISO8859-7&oe=I
+ServiceTypes=SearchProvider
+Type=Service

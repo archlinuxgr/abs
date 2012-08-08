@@ -1,0 +1,46 @@
+# Initial Contributor: Flamelab <panosfilip@gmail.com>
+# Current Maintainer: WAntilles <wantilles@adslgr.com>
+
+pkgname=kdenlive-git
+realname=kdenlive
+pkgver=20111222
+lateststablever=0.8.2
+realver=0.8.3
+latestsvnver=6018
+pkgrel=1
+pkgdesc="A video editing GUI for KDE using the MLT video framework."
+arch=('i686' 'x86_64')
+url="http://kdenlive.sourceforge.net/"
+license=('GPL')
+depends=('kdebase-runtime>=4.7.0' 'mlt>=0.7.7' 'dvgrab' 'qimageblitz>=0.0.6'
+         'qjson>=0.7.1')
+makedepends=('cmake' 'automoc4')
+replaces=('kdenlive-svn')
+conflicts=('kdenlive' 'kdenlive-svn')
+provides=("kdenlive=${realver}" "kdenlive-svn=${latestsvnver}")
+options=(!libtool)
+sourcetarballdir=http://archlinuxgr.tiven.org/sources
+source=(${sourcetarballdir}/${pkgname}-${pkgver}.tar.xz)
+
+build() {
+  export LDFLAGS="$LDFLAGS -lX11"
+
+  cd ${srcdir}/${realname}
+
+  mkdir build
+  cd build
+
+  cmake .. -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DLIB_INSTALL_DIR=/usr/lib \
+        -DLINK_LIBRARIES=-lX11
+  make
+}
+
+package() {
+  cd ${srcdir}/${realname}/build
+
+  make DESTDIR=${pkgdir} install
+}
+
+sha256sums=('cc5e0d8011577d7672493afac0ae472fa10bd8702d40edef57ad28437e771d1f')

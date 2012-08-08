@@ -1,0 +1,22 @@
+#Contributor: ranger @ adslgr.com
+pkgname=raphsody-plasmatheme
+realname=raphsody
+pkgver=0.3
+pkgrel=2
+pkgdesc="Raphsody plasmatheme"
+groups=('adslgr-kde4-eyecandy' 'adslgr-kthemes')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/Raphsody?content=95741"
+depends=('kdebase-workspace>=4.2.0')
+conflicts=('plasma-theme-raphsody')
+source=("http://www.kde-look.org/CONTENT/content-files/95741-Raphsody.tar.gz")
+license=("Creative Commons")
+md5sums='714f22612b27cc59033835a74f358681'
+
+build()
+{
+  mkdir -p $pkgdir/usr/share/apps/desktoptheme
+  cd $srcdir
+  cp -R Raphsody $pkgdir/usr/share/apps/desktoptheme
+}
+

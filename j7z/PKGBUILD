@@ -1,0 +1,53 @@
+# Contributor: Xavion <Xavion (dot) 0 (at) Gmail (dot) com>
+# Current i686 Maintainer: ifaigios <ifaigios_at_gmail_dot_com>
+
+pkgname=j7z
+_realname=J7Z
+_oldname=q7z
+_oldername=k7z
+pkgver=1.1.0
+pkgrel=1
+pkgdesc="An alternative 7-Zip GUI"
+arch=("any")
+url="http://${_realname}.Xavion.name"
+license=("LGPL3")
+depends=("java-runtime>=6" "p7zip")
+#makedepends=("make" "apache-ant" "java-environment>=6")
+makedepends=("make")
+optdepends=("p7zip-gui: Smooth progress bar"
+			"gtk-kde4: KDE style support"
+			"oxygen-gtk: Native 'Oxygen' style"
+			"tar: Supports POSIX attributes"
+			"bsdtar: Supports POSIX attributes"
+			"gzip: Supports GZip archives"
+			"bzip2: Supports BZip2 archives"
+			"xz-utils: Supports XZ archives")
+conflicts=(${_oldname} ${_oldername})
+replaces=(${_oldname} ${_oldername})
+install="${_realname}.install"
+#source=(http://prdownloads.sourceforge.net/${oldername}/${realname}-${pkgver}-src.tar.bz2)
+source=(http://prdownloads.sourceforge.net/${_oldername}/${_realname}-${pkgver}-bin.tar.bz2)
+
+build() {
+	cd "${srcdir}"/${_realname}/Build
+
+	# Environment
+	source /etc/profile.d/jre.sh || source /etc/profile.d/openjdk6.sh
+	#source /etc/profile.d/apache-ant.sh
+
+	#make uninstall
+	#make clean
+	make
+}
+
+package() {
+	cd "${srcdir}"/${_realname}/Build
+
+	make DESTDIR="${pkgdir}" install
+
+	# Messages
+	msg "Seek further information or send feedback via the 'Help' menu."
+}
+
+#sha1sums=('d646a7126745fc5ed16db3ac2dd5db33b80c92ed')
+sha1sums=('3f07045caa711b70491b531e232e0f8b54bef047')

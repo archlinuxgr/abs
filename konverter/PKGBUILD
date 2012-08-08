@@ -1,0 +1,24 @@
+# Maintainer: Eric Belanger <belanger@astro.umontreal.ca>
+
+pkgname=konverter
+pkgver=0.93
+pkgrel=4
+pkgdesc="A KDE MEncoder frontend for easy video conversions, scaling and cropping."
+arch=('i686' 'x86_64')
+url="http://www.kraus.tk/projects/konverter/"
+license="GPL"
+depends=('kdelibs' 'mplayer' 'xine-lib')
+source=(http://www.kraus.tk/projects/konverter/sources/$pkgname-$pkgver.tar.gz)
+md5sums=('e0dce10b449aaad948f8a749d01e7b00')
+
+build() {
+  cd $srcdir/$pkgname
+  sed -i 's|/opt/kde3/include|/opt/kde/include|' src/src.pro
+  sed -i 's|/usr/share/qt3|/opt/qt/include|' src/src.pro
+  sed -i 's|/usr/lib/qt3|/opt/qt/lib|' src/src.pro
+  sed -i 's|/usr/lib/kde3|/opt/kde/lib|' src/src.pro
+  qmake
+  make
+  sed -i 's|(INSTALL_ROOT)/usr/bin/|(INSTALL_ROOT)/opt/kde/bin/|g' src/Makefile
+  make INSTALL_ROOT=$pkgdir install
+}

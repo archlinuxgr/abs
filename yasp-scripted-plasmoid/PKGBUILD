@@ -1,0 +1,27 @@
+# Contributor: ranger @ adslgr.com
+pkgname=yasp-scripted-plasmoid 
+realname=yasp-scripted
+pkgver=1.0.1
+pkgrel=1
+pkgdesc="Yet Another System Plasmoid, but more configurable" 
+groups=('adslgr-plasmoids')
+arch=('i686' 'x86_64') 
+options=('force')
+url="http://www.kde-look.org/content/show.php?content=109367" 
+depends=('kdebase-workspace>=4.3.0') 
+makedepends=('cmake' 'automoc4') 
+install=yasp-scripted.install
+source=("http://www.kde-look.org/CONTENT/content-files/109367-${realname}-${pkgver}.tar.bz2") 
+license=('GPL') 
+md5sums=('62645fe2cb7297512bc2c72f063a34e1')
+
+
+build() {
+  mkdir -p $pkgdir/usr/share/apps/yasp-scripted
+  cp $srcdir/$realname-$pkgver/README.syntax $pkgdir/usr/share/apps/yasp-scripted/
+  cp -r $srcdir/$realname-$pkgver/yasp_scripts/ $pkgdir/usr/share/apps/yasp-scripted/
+  cd $srcdir/$realname-$pkgver
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=release 
+  make VERBOSE=1
+  make DESTDIR=$pkgdir install
+}

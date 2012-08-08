@@ -1,0 +1,44 @@
+# Contributor: wantilles <wantilles@adslgr.com>
+
+pkgname=karia2
+pkgver=37
+pkgrel=3
+pkgdesc="QT4 interface for aria2 download mananger"
+arch=('i686' 'x86_64')
+url="http://sourceforge.net/project/showfiles.php?group_id=203432"
+license=('GPL')
+depends=('qt' 'aria2')
+source=()
+md5sums=()
+
+_svntrunk=https://karia2.svn.sourceforge.net/svnroot/karia2
+_svnmod=$pkgname
+
+build() {
+  cd $srcdir
+
+  if [ -d $_svnmod/.svn ]; then
+    (cd $_svnmod && svn up -r $pkgver)
+  else
+    svn co $_svntrunk --config-dir ./ -r $pkgver $_svnmod
+  fi
+
+  msg "SVN checkout done or server timeout"
+  msg "Starting make..."
+
+  rm -r $srcdir/$_svnmod-build
+  cp -r $_svnmod $_svnmod-build
+  cd $_svnmod-build
+
+  #
+  # BUILD
+  #
+  qmake
+  make PREFIX=/usr
+  install -Dm755 $pkgname $pkgdir/usr/bin/$pkgname
+  install -d $pkgdir/usr/share/$pkgname/
+  cp -R images $pkgdir/usr/share/$pkgname/
+  install -Dm755 bin/resume $pkgdir/usr/bin/karia2-resume
+  rm -rf $pkgdir/usr/share/karia2/images/.svn 
+}
+

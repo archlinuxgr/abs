@@ -1,0 +1,21 @@
+pkgname=autoconf-compat
+_modpkgname=autoconf
+pkgver=2.13
+pkgrel=3
+pkgdesc="A GNU tool for automatically configuring source code"
+arch=(i686 x86_64)
+url="http://www.gnu.org/software/autoconf"
+license=('GPL2')
+depends=('awk' 'm4' 'diffutils' 'bash' 'perl')
+source=(http://ftpmirror.gnu.org/$_modpkgname/$_modpkgname-$pkgver.tar.gz)
+md5sums=('9de56d4a161a723228220b0f425dc711')
+
+build() {
+  cd $srcdir/$_modpkgname-$pkgver
+  ./configure --prefix=/usr --infodir=/usr/share/info --program-suffix=-2.13
+  make
+  make prefix=${pkgdir}/usr infodir=${pkgdir}/usr/share/info install
+  mv ${pkgdir}/usr/share/info/autoconf{,-${pkgver}}.info
+  mv ${pkgdir}/usr/share/info/standards{,-${pkgver}}.info
+}
+

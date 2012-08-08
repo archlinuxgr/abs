@@ -1,0 +1,19 @@
+#Contributor: ranger @ adslgr.com
+pkgname=glassified-kdm-netbook
+realname=Glassified-Netbook
+pkgver=1.2.1
+pkgrel=4
+pkgdesc="Glassified KDM theme - Netbook edition"
+arch=('any')
+groups=('adslgr-kdm4' 'adslgr-kde4-eyecandy')
+url="http://kde-look.org:80/content/show.php/Glassified+KDM+-+Netbook+Edition?content=100407"
+license=('LGPL')
+source=(http://www.wochenendkommune.org/kde-look/${realname}-KDM.tar.gz)
+md5sums=('b63962d386cd3ba1e3d768eca5599f6c')
+
+build() {
+  cd ${srcdir}/
+  mkdir -p $pkgdir/usr/share/apps/kdm/themes
+  mv ${realname}/ $pkgdir/usr/share/apps/kdm/themes
+}
+

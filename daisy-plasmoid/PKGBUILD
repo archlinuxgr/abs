@@ -1,0 +1,22 @@
+# Contributor: ranger @ adslgr.com
+pkgname=daisy-plasmoid
+realname=plasma-applet-daisy
+pkgver=0.0.4.21
+pkgrel=1
+pkgdesc="A simple application launcher for Plasma"
+groups=('adslgr-plasmoids')
+arch=('i686' 'x86_64')
+url="http://lechio.freehostia.com/daisy.html"
+depends=('kdebase-workspace>=4.3.0')
+makedepends=('cmake' 'automoc4' 'gcc')
+source=("http://daisyplasma.freehostia.com/downloads/${realname}-${pkgver}.tar.gz")
+license=('GPL')
+md5sums=('37197c1f67fc9d501055b62e06f3b1a3')
+
+
+build() {
+  cd $srcdir/${realname}-${pkgver}
+	cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE
+	make VERBOSE=1
+        make DESTDIR=$pkgdir install
+}

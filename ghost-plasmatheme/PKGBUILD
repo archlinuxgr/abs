@@ -1,0 +1,22 @@
+#Contributor: ranger @ adslgr.com
+pkgname=ghost-plasmatheme
+realname=ghost
+pkgver=1.0
+pkgrel=1
+pkgdesc="A futuristic theme inspired by Ghost in the Shell"
+groups=('adslgr-kde4-eyecandy')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/Oxyglass?content=107902"
+depends=('kdebase-workspace>=4.2.0')
+conflicts=('plasma-theme-oxyglass')
+source=("http://www.kde-look.org/CONTENT/content-files/107902-${realname}.tar.gz")
+license=('GPL')
+md5sums='c75021e175486df0cc4c5d82f43f4caf'
+
+build()
+{
+  mkdir -p $pkgdir/usr/share/apps/desktoptheme
+  cd $srcdir
+  cp -R Ghost $pkgdir/usr/share/apps/desktoptheme
+}
+

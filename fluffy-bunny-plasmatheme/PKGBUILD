@@ -1,0 +1,21 @@
+#Contributor: ranger @ adslgr.com
+pkgname=fluffy-bunny-plasmatheme
+realname=fluffybunny
+pkgver=1.0
+pkgrel=2
+pkgdesc="The fluffy bunny plasma theme ported to KDE 4.2"
+groups=('adslgr-kde4-eyecandy' 'adslgr-kthemes')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/Fluffy+Bunny?content=101944"
+depends=('kdebase-workspace>=4.2.0')
+source=("http://berkenpies.nl/fluffy_bunny/fluffy_bunny.tar.bz2")
+license=('LGPL')
+md5sums='94e02a9401e4745770f391abe2fb8f78'
+
+build()
+{
+  mkdir -p $pkgdir/usr/share/apps/desktoptheme
+  cd $srcdir
+  cp -R ${realname} $pkgdir/usr/share/apps/desktoptheme
+}
+

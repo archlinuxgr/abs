@@ -1,0 +1,40 @@
+
+2011-02-25 (Adam)
+ * Fix bug where KMess would fail to build on relwithdebinfo builds when
+   --enable-debug-output was set
+
+--- 2.0.6.1 released ---
+
+2011-02-16 (Adam)
+ * Fix yet another login bug caused because our initial profile data no
+   longer includes a language preference.
+
+--- 2.0.6 released ---
+
+2011-01-13 (Adam)
+ * Fix bug where KMess couldn't login due to badly formed URL commands.
+
+2011-01-08 (Valerio)
+ * Fixed crash when taking any action in the Contact Added User dialog.
+   Also removed an unnecessary signal-bouncing slot.
+ * Fixed a dangling pointer issue when the Contact Added User dialog was
+   shown, closed and shown again.
+
+2011-01-05 (Adam)
+ * Add new widget, FaderWidget, which smoothly fades between the initial view
+   and the contact list. Disable by setting NoFadeEffect to true under the
+   MainWindow section of kmessrc.
+
+2011-01-02 (Pano)
+ * Merged an updated Japanese translation by Daniel E. Moctezuma.
+ * Merged an updated Spanish translation by Daniel E. Moctezuma.
+ * Merged an updated German translation.
+
+2010-12-24 (Adam)
+ * Fix retrieval of roaming display picture.
+
+2010-12-23 (Adam)
+ * Fix a problem where roaming service profile data was invalid.
+
+2010-12-13 (Valerio)
+ * Fixed "Visit Link" context-menu icon in chat. Thanks to IRC's agostino for the

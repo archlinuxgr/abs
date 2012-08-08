@@ -1,0 +1,34 @@
+# Contributor: WAntilles <wantilles@adslgr.com>
+
+pkgname=mplayerthumbs-stripes
+pkgver=1.0
+pkgrel=6
+lateststablever=4.3.3
+arch=('i686' 'x86_64')
+sourcetarballdir=http://adslgr64.tiven.org/sources
+pkgdesc='Video Files (MPlayerThumbs) - A much better version'
+url='http://www.kde-apps.org/content/show.php/Mplayerthumbs-Strips?content=114655'
+license=('GPL' 'LGPL' 'FDL')
+depends=('kdelibs>=4.3.3' 'kdebase-runtime>=4.3.3' 'mplayer>=29776')
+conflicts=('mplayerthumbs' 'kdemultimedia-mplayerthumbs')
+provides=("kdemultimedia-mplayerthumbs=${lateststablever}")
+makedepends=('pkg-config' 'cmake' 'automoc4' 'kdelibs-experimental>=4.3.3' 'tunepimp' 'cdparanoia')
+source=(${sourcetarballdir}/${pkgname}-${pkgver}.tar.bz2
+        mplayerthumbs-stripes.config)
+md5sums=('b1d0a7b0c6da0f7525be32b0cb0190df'
+         '698c1579905135043dcdd4dbe55f2c7e')
+
+build() {
+  cd ${srcdir}
+  mkdir build
+  cd build
+  cmake ../${pkgname} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr
+  make
+
+  cd ${srcdir}/build/mplayerthumbs
+  make DESTDIR=${pkgdir} install
+  install -D -m644 ${srcdir}/mplayerthumbs-stripes.config ${pkgdir}/usr/share/config/mplayerthumbs
+}
+

@@ -1,0 +1,30 @@
+# Contributor: Nick B <Shirakawasuna at gmail _dot_com>
+# MAintainer: ranger @ adslgr.com
+
+pkgname=kcometen4
+pkgver=1.0.5
+pkgrel=1
+pkgdesc="A popular OpenGL KDE screensaver."
+arch=('i686' 'x86_64')
+url="http://www.kde-apps.org/content/show.php/KCometen4?content=87586"
+license=('GPL2')
+depends=('kdebase-workspace' 'kdelibs>=4.1.0' 'libgl')
+makedepends=('cmake' 'automoc4')
+source=(http://www.kde-apps.org/CONTENT/content-files/87586-kcometen4-$pkgver.tar.gz
+	archdiff-kcometen4.patch)
+md5sums=('7382c87cab98639aa9650f4f0bad4833'
+         'fcda933a697a57f915f2bd8f27979c0b')
+
+build() {
+
+cd $srcdir/kcometen4-$pkgver
+patch -p1 <../archdiff-kcometen4.patch
+
+mkdir build
+cd build
+
+cmake -DCMAKE_INSTALL_PREFIX=/usr ../
+make
+make DESTDIR=$pkgdir install
+
+}

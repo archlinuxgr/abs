@@ -1,0 +1,23 @@
+# Contributor: ranger @ adslgr.com
+
+pkgname=ihatethecashew-plasmoid
+realname=iHateTheCashew
+pkgver=0.4
+pkgrel=1
+pkgdesc="a plasmoid to remove the cashew icon"
+groups=('adslgr-plasmoids')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php?content=91009"
+depends=('kdebase-workspace>=4.3.0')
+makedepends=('cmake' 'automoc4' 'gcc')
+source=('http://www.kde-look.org:80/CONTENT/content-files/91009-iHateTheCashew-4.2.tbz')
+license=('GPL')
+md5sums=('f7e6f11956f16db8e3ee250d47dac0ee')
+
+
+build() {
+  cd $srcdir/$realname
+	cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE
+	make VERBOSE=1
+        make DESTDIR=$pkgdir install
+}

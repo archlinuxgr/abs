@@ -1,0 +1,21 @@
+# Contributor: hydro <hydro@freenet.de>
+
+pkgname=mediainfo
+pkgver=0.7.27
+pkgrel=1
+pkgdesc="supplies technical and tag information about a video or audio file"
+arch=('i686' 'x86_64')
+url="http://mediainfo.sourceforge.net"
+license=('GPL')
+depends=('libmediainfo>=0.7.27')
+source=(http://downloads.sourceforge.net/mediainfo/${pkgname}_${pkgver}.tar.bz2)
+md5sums=('0826dcdfc6f6149813b0002576b3dc66')
+
+build() {
+  cd $srcdir/MediaInfo/Project/GNU/CLI
+  chmod +x autogen
+  ./autogen
+  ./configure --prefix=/usr
+  make
+  make DESTDIR=$pkgdir install
+}

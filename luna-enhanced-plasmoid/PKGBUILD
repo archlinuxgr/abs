@@ -1,0 +1,22 @@
+# Contributor: ranger @ adslgr.com
+pkgname=luna-enhanced-plasmoid 
+realname=luna-enhanced
+pkgver=1.90
+pkgrel=2
+pkgdesc="The classic Luna plasmoid with a little modification" 
+groups=('adslgr-plasmoids')
+arch=('i686' 'x86_64') 
+url="http://www.kde-look.org/content/show.php?content=106492" 
+depends=('kdebase-workspace>=4.3.0') 
+makedepends=('cmake' 'automoc4') 
+source=("http://www.kde-look.org/CONTENT/content-files/106492-${realname}.tar.gz") 
+license=('GPL') 
+md5sums=('1584388b96623d96deaf9406e209a33d')
+
+
+build() {
+  cd $srcdir/$realname
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=release 
+  make VERBOSE=1
+  make DESTDIR=$pkgdir install
+}

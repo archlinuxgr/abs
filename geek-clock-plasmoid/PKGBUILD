@@ -1,0 +1,22 @@
+# Contributor: ranger @ adslgr.com
+pkgname=geek-clock-plasmoid
+realname=geek-clock-plasmoid
+pkgver=1.0
+pkgrel=3
+pkgdesc="Plasmoid depicting the Geek Clock"
+groups=('adslgr-plasmoids')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org:80/content/show.php?content=107807"
+depends=('kdebase-workspace>=4.3.0')
+makedepends=('cmake' 'automoc4' 'gcc')
+source=("http://w2f2.com/projects/geekclock/geek-clock-plasmoid-1.0-src.tar.gz")
+license=('GPL')
+md5sums=('0606169b6811327358987f52fbbe1ebb')
+
+
+build() {
+  cd $srcdir/${realname}-${pkgver}-src
+	cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE
+	make VERBOSE=1
+        make DESTDIR=$pkgdir install
+}

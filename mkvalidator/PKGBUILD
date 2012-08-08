@@ -1,0 +1,33 @@
+pkgname=mkvalidator
+pkgver=0.2.3
+pkgrel=3
+pkgdesc="Validator for MKV files"
+arch=('i686' 'x86_64')
+url="http://www.matroska.org/downloads/${pkgname}.html"
+license=('BSD')
+depends=('libebml' 'libmatroska')
+source=(https://sourceforge.net/projects/matroska/files/${pkgname}/${pkgname}-${pkgver}.tar.bz2)
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  ./configure
+
+  make -C ${pkgname}
+}
+
+package() {
+  if [ $CARCH = "i686" ]; then
+      _gcc_linux="gcc_linux"
+  elif [ $CARCH = "x86_64" ]; then
+      _gcc_linux="gcc_linux_x64"
+  fi
+
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  mkdir -p ${pkgdir}/usr/bin/
+
+  mv release/$_gcc_linux/${pkgname} ${pkgdir}/usr/bin/
+}
+
+md5sums=('1450b326c70b74974b6fa6690b6671f8')

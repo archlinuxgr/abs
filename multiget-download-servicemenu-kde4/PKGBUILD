@@ -1,0 +1,19 @@
+# Maintainer: ranger.linux@gmail.com
+pkgname=multiget-download-servicemenu-kde4
+realname=download_with_multiget_v.0.2_kde4
+pkgver=0.2
+pkgrel=1
+pkgdesc="A simple service menu to download files with MultiGet from konqueror"
+arch=("any")
+url="http://www.kde-apps.org/content/show.php/Download+with+MultiGet+Servicemenu?content=78501"
+license=('GPL')
+depends=('multiget')
+makedepends=()
+source=(http://www.antithesi.net/download_with_multiget_v.0.2_kde4.tar.gz)
+md5sums=('64f41b40117945908bbed81bebc098c6')
+
+build() {
+   mkdir -p $pkgdir/usr/share/kde4/services/ServiceMenus/
+   cd $srcdir/$realname/src
+   install -m755 *.desktop $pkgdir/usr/share/kde4/services/ServiceMenus/
+}

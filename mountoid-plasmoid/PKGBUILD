@@ -1,0 +1,22 @@
+# Contributor: ranger @ adslgr.com
+
+pkgname=mountoid-plasmoid
+realname=mountoid
+pkgver=0.1
+pkgrel=1
+pkgdesc="A plasmoid that provides a way to mount/unmount devices from fstab"
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/Mountoid?content=115943"
+license=('GPL')
+depends=('kdebase-workspace>=4.3.0')
+makedepends=('gcc' 'cmake' 'automoc4')
+source=(http://www.kde-look.org/CONTENT/content-files/115943-${realname}-${pkgver}.tar.gz)
+groups=('adslgr-plasmoids')
+build() {
+  cd $srcdir/$realname
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=release 
+  make VERBOSE=1
+  make DESTDIR=$pkgdir install
+}
+
+md5sums=('7d5e5b824e032eaf716d026f7c67eee7')

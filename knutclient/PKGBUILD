@@ -1,0 +1,23 @@
+# Contributor: ranger
+
+pkgname=knutclient
+pkgver=0.9.4
+pkgrel=1
+pkgdesc="Knutclient is a GUI interface for UPS system NUT."
+url="http://www.knut.noveradsl.cz/knutclient/"
+arch=('i686' 'x86_64')
+license=('GPL')
+depends=("kdelibs3")
+makedepends=("automake=1.9")
+source=(ftp://ftp.buzuluk.cz/pub/alo/knutclient/stable/$pkgname-$pkgver.tar.gz)
+md5sums=('c2f99e390f1fee470de2cab8c3a5fddd')
+
+build() {
+. /etc/profile.d/qt3.sh
+. /etc/profile.d/kde3.sh
+  cd $srcdir/$pkgname-$pkgver
+  ./configure --prefix=`kde-config --prefix` --without-arts
+  make
+  make DESTDIR=$pkgdir install
+}
+

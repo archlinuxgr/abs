@@ -1,0 +1,36 @@
+pkgname=hplip-qt4
+pkgver=3.9.2
+pkgrel=3
+realname-hplip
+pkgdesc="Drivers for HP DeskJet, OfficeJet, Photosmart, Business Inkjet and some LaserJet."
+arch=('i686' 'x86_64')
+url="http://hplip.sourceforge.net"
+license=('GPL')
+depends=('cups' 'python' 'net-snmp>=5.4' 'ghostscript'
+	 'foomatic-db' 'foomatic-db-hpijs' 'foomatic-db-engine'
+	 'portmap' 'libcups' 'sane')
+makedepends=('pyqt>=4.4' 'pkg-config')
+replaces=('hpijs' 'hplip')
+conflicts=('hpijs' 'hplip')
+provides=("hplip=${pkgver}")
+options=('!libtool')
+install=hplip-qt4.install
+source=(http://downloads.sourceforge.net/sourceforge/${realname}/${realname}-${pkgver}.tar.gz
+	hplip-3.9.2-high_cpu_utilization_logout.patch)
+
+md5sums=('581224f556a23ac5545dde541b6f54ca'
+	 '8e34699a7093905fd31f2b25fbccb0db')
+
+build() {
+  cd ${srcdir}/${realname}-${pkgver}
+  patch hpdio.py ../hplip-3.9.2-high_cpu_utilization_logout.patch
+  ./configure --prefix=/usr --enable-foomatic-rip-hplip-install \
+  --enable-foomatic-ppd-install --enable-qt4 --disable-qt3
+  make
+  make DESTDIR=${pkgdir}/ install
+
+  rm -rf ${pkgdir}/etc/sane.d
+  # remove autostart of hp-daemon
+  rm -r ${pkgdir}/etc/xdg
+}
+

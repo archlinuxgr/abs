@@ -1,0 +1,100 @@
+diff -Naur old/trunk/src/basegui.cpp new/trunk/src/basegui.cpp
+--- old/trunk/src/basegui.cpp	2011-04-05 23:40:20.000000000 +0300
++++ new/trunk/src/basegui.cpp	2011-04-07 18:24:46.338464670 +0300
+@@ -3220,7 +3220,7 @@
+ 		for (n=0; n < core->mdat.chapters; n++) {
+ 			QAction *a = new QAction(chapterGroup);
+ 			a->setCheckable(true);
+-			a->setText( QString::number(n+1) );
++			a->setText(core->mdat.chapters_name[n]);
+ 			a->setData( n + Core::firstChapter() );
+ 		}
+ 	} else {
+@@ -3244,7 +3244,7 @@
+ 			for (n=0; n < core->mdat.mkv_chapters; n++) {
+ 				QAction *a = new QAction(chapterGroup);
+ 				a->setCheckable(true);
+-				a->setText( QString::number(n+1) );
++				a->setText(core->mdat.mkv_chapters_name[n]);
+ 				a->setData( n + Core::firstChapter() );
+ 			}
+ 		} else {
+diff -Naur old/trunk/src/mediadata.cpp new/trunk/src/mediadata.cpp
+--- old/trunk/src/mediadata.cpp	2011-04-05 23:40:20.000000000 +0300
++++ new/trunk/src/mediadata.cpp	2011-04-07 18:19:18.192126064 +0300
+@@ -52,11 +52,13 @@
+ 
+ #if GENERIC_CHAPTER_SUPPORT
+ 	chapters = 0;
++	chapters_name.clear();
+ #else
+ 	//chapters=0;
+ 	//angles=0;
+ 
+ 	mkv_chapters=0;
++	mkv_chapters_name.clear();
+ #endif
+ 
+ 	initialized=false;
+diff -Naur old/trunk/src/mediadata.h new/trunk/src/mediadata.h
+--- old/trunk/src/mediadata.h	2011-04-05 23:40:20.000000000 +0300
++++ new/trunk/src/mediadata.h	2011-04-07 18:20:42.000267638 +0300
+@@ -29,7 +29,7 @@
+ 
+ #include <QString>
+ #include <QSettings>
+-
++#include <QMap>
+ 
+ // Types of media
+ 
+@@ -78,11 +78,13 @@
+ 
+ #if GENERIC_CHAPTER_SUPPORT
+ 	int chapters;
++	QMap<int,QString> chapters_name;
+ #else
+ 	//int chapters, angles; // for DVDs
+ 
+ 	// Matroshka chapters
+ 	int mkv_chapters;
++	QMap<int,QString> mkv_chapters_name;
+ #endif
+ 
+ 	// Clip info
+diff -Naur old/trunk/src/mplayerprocess.cpp new/trunk/src/mplayerprocess.cpp
+--- old/trunk/src/mplayerprocess.cpp	2011-04-05 23:40:20.000000000 +0300
++++ new/trunk/src/mplayerprocess.cpp	2011-04-07 18:23:17.450637773 +0300
+@@ -113,6 +113,7 @@
+ static QRegExp rx_screenshot("^\\*\\*\\* screenshot '(.*)'");
+ static QRegExp rx_endoffile("^Exiting... \\(End of file\\)|^ID_EXIT=EOF");
+ static QRegExp rx_mkvchapters("\\[mkv\\] Chapter (\\d+) from");
++static QRegExp rx_mkvchapters_name("^ID_CHAPTER_(\\d+)_NAME=(.*)");
+ static QRegExp rx_aspect2("^Movie-Aspect is ([0-9,.]+):1");
+ static QRegExp rx_fontcache_start("^\\[ass\\] Init");
+ static QRegExp rx_fontcache_end("^\\[ass\\] Updating font cache");
+@@ -502,6 +503,24 @@
+ 		}
+ 		else
+ 
++		if (rx_mkvchapters_name.indexIn(line)!=-1) {
++			int id = rx_mkvchapters_name.cap(1).toInt();
++			QString s = rx_mkvchapters_name.cap(2);
++			qDebug("MplayerProcess::parseLine: mkv chapters: %d", id);
++			qDebug("MplayerProcess::parseLine: mkv chapters name: %s", s.toUtf8().data());
++#if GENERIC_CHAPTER_SUPPORT
++			//Only insert the first time. 
++			//When playing mkv ordered chapter file, mplayer will scan all the file in the directory and it'll mess up the chapter's name.
++			if(!md.chapters_name.contains(id))
++				md.chapters_name.insert(id,s);
++#else
++			if(!md.mkv_chapters_name.contains(id))
++				md.mkv_chapters_name.insert(id,s);
++#endif
++		}
++
++		else
++
+ 		// VCD titles
+ 		if (rx_vcd.indexIn(line) > -1 ) {
+ 			int ID = rx_vcd.cap(1).toInt();

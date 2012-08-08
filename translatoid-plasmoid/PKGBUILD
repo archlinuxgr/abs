@@ -1,0 +1,26 @@
+# Contributor: ranger @ adslgr.com
+pkgname=translatoid-plasmoid
+realname=translatoid
+pkgver=1.1
+pkgrel=1.1
+realver=1-1
+pkgdesc="A plasmoid translator using google translator"
+groups=('adslgr-plasmoids')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/translatoid?content=97511"
+depends=('kdebase-workspace>=4.3.0' 'qjson')
+makedepends=('cmake' 'automoc4' 'gcc' 'qjson')
+source=("http://thecorpo.fr/sacha/${realname}/${realname}${realver}.tar.gz")
+license=('GPL')
+
+
+build() {
+  cd ${srcdir}/${realname}-${pkgver}
+	cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE
+	make VERBOSE=1
+        make DESTDIR=$pkgdir install
+
+# already provided by qjson
+ rm ${pkgdir}/usr/share/apps/cmake/modules/FindQJSON.cmake
+}
+md5sums=('8af4f9243dea07f250b486c0c1b9c6ea')

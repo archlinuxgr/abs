@@ -1,0 +1,26 @@
+# Contributor: Giovanni Scafora <linuxmania@gmail.com>
+
+pkgname=streamdvd
+pkgver=0.4
+pkgrel=3
+pkgdesc="A fast tool to backup Video DVDs on the fly"
+arch=('i686' 'x86_64')
+url="http://www.badabum.de/streamdvd.html"
+license=('GPL')
+depends=('gcc' 'libdvdread')
+conflicts=('lsdvd')
+source=(http://www.mirrorservice.org/sites/www.ibiblio.org/gentoo/distfiles/$pkgname-$pkgver.tar.gz gcc41.patch libdvdread.patch)
+md5sums=('5e85dee490c5c5fb20faf87851fdca74' 'a8ecd0a1287aff60ab7e174cb73a42c4' \
+         '112f8d68609bdf1c4e396a48fc7ac89b')
+
+build()
+{
+  cd $srcdir/StreamDVD-$pkgver
+  patch -Np0 -i ../../gcc41.patch
+  patch -Np0 -i ../../libdvdread.patch
+  make
+  make addon
+  install -d $pkgdir/usr/bin
+  make INSTALLDIR=$pkgdir/usr/bin install
+}
+

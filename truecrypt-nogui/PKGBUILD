@@ -1,0 +1,38 @@
+# Current i686 Maintainer: ifaigios <ifaigios_at_gmail_dot_com>
+# Contributor: Corrado Primier <ilbardo.gmail.com>
+
+pkgname=truecrypt-nogui
+_pkgname=truecrypt
+pkgver=7.1
+pkgrel=1
+pkgdesc="Free open-source cross-platform disk encryption software - CLI version"
+url="http://www.truecrypt.org/"
+arch=('i686' 'x86_64')
+license=('custom') # TrueCrypt License Version 3.0
+depends=('fuse>=2.8.0' 'device-mapper' 'wxbase')
+optdepends=('sudo: mounting encrypted volumes as non-root users')
+conflicts=('truecrypt')
+provides=('truecrypt')
+source=("http://archlinuxgr.tiven.org/sources/${_pkgname}-${pkgver}-source.tar.gz"
+        # TrueCrypt's web-based source download is incompatible with makepkg
+        # Source has been placed on Arch Linux Greece server instead
+        "ftp://ftp.archlinux.org/other/tc/pkcs-2.20.tar.gz")
+        # Public-Key Cryptography Standards #11
+
+build() {
+  export PKCS11_INC="${srcdir}/pkcs-2.20"
+
+  cd ${srcdir}/${_pkgname}-${pkgver}-source
+  make NOGUI=1
+}
+
+package() {
+  # Installing binary
+  install -D -m755 ${srcdir}/${_pkgname}-${pkgver}-source/Main/${_pkgname} ${pkgdir}/usr/bin/${_pkgname}
+
+  # Installing license
+  install -D -m644 ${srcdir}/${_pkgname}-${pkgver}-source/License.txt ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+}
+
+md5sums=('a8268630a870faff07af940f63fb29eb'
+         'ce6a707b79411e82e8e558aa03e764b0')

@@ -1,0 +1,21 @@
+#Contributor: ranger @ adslgr.com
+pkgname=arezzo-plasmatheme
+realname=arezzo
+pkgver=0.6
+pkgrel=2
+pkgdesc="Arezzo plasmatheme for KDE4"
+groups=('adslgr-kde4-eyecandy' 'adslgr-kthemes')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/Oxyglass?content=96513"
+depends=('kdebase-workspace>=4.2.0')
+conflicts=('plasma-theme-arezzo')
+source=("http://kde-look.org/CONTENT/content-files/84403-Arezzo.tar.gz")
+license=('GPL')
+md5sums='e04d04a6c65f8c86503df74978eaaac6'
+
+build()
+{
+  mkdir -p $pkgdir/usr/share/apps/desktoptheme
+  cd $srcdir
+  cp -R Arezzo $pkgdir/usr/share/apps/desktoptheme
+}

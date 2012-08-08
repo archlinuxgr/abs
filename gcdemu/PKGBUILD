@@ -1,0 +1,29 @@
+# Contributor: WAntilles <wantilles@adslgr.com>
+
+pkgname=gcdemu
+pkgver=1.2.0
+pkgrel=2
+pkgdesc="GNOME panel applet controlling cdemu-daemon"
+arch=('i686' 'x86_64')
+url="http://cdemu.sourceforge.net/"
+license=('GPL2')
+depends=('python' 'pygtk' 'pygobject' 'gnome-python' 'gnome-python-desktop'
+	 'dbus-python' 'cdemu-daemon' 'gnome-doc-utils')
+makedepends=('intltool')
+install=gcdemu.install
+source=(http://downloads.sourceforge.net/cdemu/${pkgname}-${pkgver}.tar.bz2)
+md5sums=('6a84ba32746970ce064f8040f8c9ee29')
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  ./configure --prefix=/usr \
+	--sysconfdir=/etc \
+	--libexecdir=/usr/bin \
+	--disable-scrollkeeper
+  make
+  make GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1 DESTDIR=${pkgdir} install
+  install -m755 -d ${pkgdir}/usr/share/gconf/schemas
+  gconf-merge-schema ${pkgdir}/usr/share/gconf/schemas/${pkgname}.schemas --domain gcdemu ${pkgdir}/etc/gconf/schemas/*.schemas
+  rm -f ${pkgdir}/etc/gconf/schemas/*.schemas
+}
+

@@ -1,0 +1,31 @@
+# Contributor: ranger @ adslgr.com
+pkgname=tvgr-plasmoid
+realname=plasmatvgr
+pkgver=0.47
+realpkgver=047
+pkgrel=1
+pkgdesc="A plasmoid that shows the tv program of various greek channels on your desktop"
+groups=('adslgr-plasmoids')
+arch=('i686' 'x86_64')
+url="'http://www.kde-look.org/content/show.php/plasmatvgr?content=75728'"
+depends=('kdebase-workspace>=4.4.0')
+makedepends=('cmake' 'automoc4')
+source=("http://www.kde-look.org/CONTENT/content-files/75728-plasmatvgr${realpkgver}.tar.gz")
+license=('GPL')
+
+build() {
+  cd ${srcdir}/${realname}
+  mkdir build
+  cd build
+
+  cmake -DCMAKE_INSTALL_PREFIX='/usr' ..
+
+  make
+}
+
+package() {
+  cd ${srcdir}/${realname}/build
+  make DESTDIR=${pkgdir} install
+}
+
+md5sums=('9d9b2e9fe7366aceed9a4bd92ee8530d')

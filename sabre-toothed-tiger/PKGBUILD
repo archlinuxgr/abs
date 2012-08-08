@@ -1,0 +1,21 @@
+#Contributor: ranger @ adslgr.com
+pkgname=sabre-toothed-tiger-plasmatheme
+realname=SabreTiger
+pkgver=0.2
+pkgrel=2
+pkgdesc="Plasma theme that emulates the MacOSX dock. "
+groups=('adslgr-kde4-eyecandy' 'adslgr-kthemes')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/Sabre-Toothed+Tiger?content=100426"
+depends=('kdebase-workspace>=4.2.0')
+source=("http://www.kde-look.org/CONTENT/content-files/100426-${realname}.tar.bz2")
+license=('GPL')
+md5sums='8eee13a2720acfefdd27fe166f0a89e1'
+
+build()
+{
+  mkdir -p $pkgdir/usr/share/apps/desktoptheme
+  cd $srcdir
+  cp -R ${realname} $pkgdir/usr/share/apps/desktoptheme
+}
+

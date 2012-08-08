@@ -1,0 +1,35 @@
+pkgname=eclipse-linuxtools
+pkgver=0.7.0
+_pkgbuild=R201102160606
+pkgrel=1
+pkgdesc="Eclipse Linux Tools Project"
+url="http://www.eclipse.org/linuxtools"
+arch=('any')
+license=('EPL')
+depends=('eclipse')
+makedepends=('unzip')
+source=("http://ftp.ntua.gr/eclipse/technology/linuxtools/R201102160606/linuxtools-Update-S201102160606.zip")
+
+build() {
+  _dest=${pkgdir}/usr/share/eclipse/dropins/${pkgname/eclipse-}/eclipse
+
+  cd ${srcdir}
+
+  # Features
+  find features -type f | while read _feature ; do
+    if [[ ${_feature} =~ (.*\.jar$) ]] ; then
+      install -dm755 ${_dest}/${_feature%*.jar}
+      cd ${_dest}/${_feature/.jar}
+      jar xf ${srcdir}/${_feature} || return 1
+    else
+      install -Dm644 ${_feature} ${_dest}/${_feature}
+    fi
+  done
+
+  # Plugins
+  find plugins -type f | while read _plugin ; do
+    install -Dm644 ${_plugin} ${_dest}/${_plugin}
+  done
+}
+
+md5sums=('83a0db9517847e8f734c686e31b706de')

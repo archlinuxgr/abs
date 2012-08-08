@@ -1,0 +1,38 @@
+# Contributor: WAntilles <wantilles@adslgr.com>
+
+pkgname=kgtk
+pkgver=0.10.1
+pkgrel=2
+pkgdesc="LD_PRELOAD hack with helper scripts to make gtk and qt-only programs use KDE file dialogs."
+arch=('i686' 'x86_64')
+url="http://www.kde-apps.org/content/show.php?content=36077"
+license=('GPL')
+depends=('kdelibs' 'qt4')
+makedepends=('pkg-config' 'automoc4' 'cmake')
+install=kgtk.install
+source=(http://home.freeuk.com/cpdrummond/KGtk-${pkgver}.tar.bz2
+	const.patch
+	kfmclient)
+md5sums=('b456046727f0120734410573d75c47e0'
+	 '40b1ff8b469af58a8664b8197902343d'
+	 '6fdecfadd501a388aeb9ad5efa442b01')
+
+build() {
+  cd ${srcdir}/KGtk-${pkgver}
+
+  patch -Np1 -i ../const.patch
+
+  for f in */*-wrapper.cmake; do sed -i 's|LD_PRELOAD=@CMAKE_INSTALL_PREFIX@/lib/kgtk/lib|LD_PRELOAD=@CMAKE_INSTALL_PREFIX@/lib@LIB_SUFFIX@/kgtk/lib|' ${f}; done
+
+  mkdir -p ${srcdir}/build4
+  cd ${srcdir}/build4
+	
+  cmake ../KGtk-${pkgver} -DCMAKE_INSTALL_PREFIX=/usr -DKGTK_KDE4=true -DKGTK_QT4=true -DKGTK_GTK2=true
+  make
+  make DESTDIR=${pkgdir} install
+
+  # /usr/bin/kdialogd4 is missing otherwise (!)
+  cd kdialogd4
+  make DESTDIR=$pkgdir install
+}
+

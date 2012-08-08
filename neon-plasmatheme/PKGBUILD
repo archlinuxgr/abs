@@ -1,0 +1,20 @@
+#Contributor: ranger @ adslgr.com
+pkgname=neon-plasmatheme
+realname=neon-plasma-glow-by-FRUiT
+pkgver=0.3
+pkgrel=1
+pkgdesc="A very complete theme, including custom neon icons, and much more"
+groups=('adslgr-kde4-eyecandy' 'adslgr-kthemes')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/Glassified?content=111030"
+depends=('kdebase-workspace>=4.3.0')
+source=("http://www.kde-look.org/CONTENT/content-files/111030-${realname}.tar.gz")
+license=('GPL')
+md5sums='b9aef7b9be7602d1a186492ac0bea078'
+
+build()
+{
+  mkdir -p $pkgdir/usr/share/apps/desktoptheme/Neon
+  cd $srcdir
+  cp -R ${realname}/* $pkgdir/usr/share/apps/desktoptheme/Neon
+}

@@ -1,0 +1,23 @@
+# Contributor Dario 'Dax' Vilardi <dax@deelab.org>
+# Previous Maintainer: WAntilles
+# Adslgr64 Maintainer: Flamelab <panosfilip@gmail.com>
+
+pkgname=oxygenrefit2-icon-theme
+pkgver=2.4.0
+pkgrel=1
+pkgdesc="Oxygen-Refit 2 icon theme for GNOME"
+arch=('i686' 'x86_64')
+makedepends=('findutils' 'imagemagick')
+url="http://www.nanolx.org/home/item/75-oxygen-refit"
+license=('LGPL3')
+source=(http://www.nanolx.org/free/Artwork/OxygenRefit2-$pkgver.tar.bz2)
+md5sums=('f7f05922489e5e6d6c677d26b29cd251')
+
+build() {
+  cd ${srcdir}/oxygen-refit-2
+  sh buildallsizes.sh || return 1 
+  cd ${srcdir}
+  install -d ${pkgdir}/usr/share/icons/
+  cp -rf "oxygen-refit-2" ${pkgdir}/usr/share/icons/ || return 1
+  find -type f -print0 | xargs -0 chmod 644
+}

@@ -1,0 +1,20 @@
+# Contributor: WAntilles <wantilles@adslgr.com>
+
+pkgname=kde-extract-compress-service-menu
+pkgver=1.4.2
+pkgrel=1
+pkgdesc="Extract and compress service-menus for KDE4"
+arch=('i686' 'x86_64')
+url="http://www.kde-apps.org/content/show.php/Extract+And+Compress+KDE4?content=84206"
+license=('GPL')
+depends=('kdebase>=4.1.0')
+makedepends=('cmake' 'gcc')
+source=(http://www.wochenendkommune.de/kde-look/ExtractAndCompress_v${pkgver}.tar.gz)
+md5sums=('dba1caa917ae16b4732dfd30ea12b90d')
+
+build() {
+	mkdir -p ${pkgdir}/usr/{bin,share/kde4/services/ServiceMenus}
+	for i in ${srcdir}/ExtractAndCompress_v1.4.2/src/*.desktop; do install -D -m644 $i ${pkgdir}/usr/share/kde4/services/ServiceMenus/; done
+	for i in ${srcdir}/ExtractAndCompress_v1.4.2/src/*.sh; do install -D -m755 $i ${pkgdir}/usr/bin/; done
+}
+

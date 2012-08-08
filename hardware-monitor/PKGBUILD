@@ -1,0 +1,22 @@
+pkgname=hardware-monitor
+pkgver=1.4.2
+pkgrel=5
+pkgdesc="The Hardware Monitor applet is a small program for the Gnome panel which tries to be a beautiful all-round solution to hardware monitoring."
+arch=('i686' 'x86_64')
+url="http://people.iola.dk/olau/hardware-monitor/"
+license=('GPL')
+depends=('gtkmm>=2.6' 'gconfmm' 'libglademm' 'libgnomecanvasmm' 'libgtop'
+         'gnome-panel' 'lm_sensors')
+makedepends=('perlxml')
+source=(http://people.iola.dk/olau/hardware-monitor/source/${pkgname}-${pkgver}.tar.bz2)
+md5sums=('bf7ddae1cfff1c569a3bbb814d409314')
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var \
+    --libexecdir=/usr/lib/hardware-monitor
+  make
+  make DESTDIR=${pkgdir} install
+}
+

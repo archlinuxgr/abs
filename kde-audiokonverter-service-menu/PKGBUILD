@@ -1,0 +1,32 @@
+# Contributor: WAntilles <wantilles@adslgr.com>
+
+pkgname=kde-audiokonverter-service-menu
+pkgver=5.8b
+pkgrel=1
+pkgdesc="A service menu for KDE4 that allows one to easily convert between many audio formats."
+arch=('i686' 'x86_64')
+url="http://www.kde-apps.org/content/show.php/audiokonverter?content=12608"
+license=('GPL2')
+depends=('kdebase>=4.1.0')
+makedepends=('cmake' 'gcc')
+source=(http://www.kde-apps.org/CONTENT/content-files/12608-audiokonverter-5.8-beta.tar.bz2
+	arch_patch)
+md5sums=('498127753c74d7c7b162e0815c979dd2'
+         '031e35ed70bf8b420210912eeacfc6a7')
+
+build() {
+	#Patch Files
+	cd ${srcdir}/audiokonverter-5.8-beta
+	patch -p1 < ../arch_patch
+
+	#Install Scripts
+	install -D -m755 ${srcdir}/audiokonverter-5.8-beta/anytowav ${pkgdir}/usr/bin/anytowav
+	install -m755 ${srcdir}/audiokonverter-5.8-beta/audioconvert ${pkgdir}/usr/bin/
+	install -m755 ${srcdir}/audiokonverter-5.8-beta/movie2sound ${pkgdir}/usr/bin/
+	install -m755 ${srcdir}/audiokonverter-5.8-beta/oggdrop-lx ${pkgdir}/usr/bin/
+
+	#Install service menus
+	mkdir -p ${pkgdir}/usr/share/kde4/services/ServiceMenus
+	for i in ${srcdir}/audiokonverter-5.8-beta/*4.desktop; do install -m644 $i ${pkgdir}/usr/share/kde4/services/ServiceMenus/; done
+}
+

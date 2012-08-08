@@ -1,0 +1,22 @@
+#Contributor: ranger @ adslgr.com
+pkgname=domino-kde4decor
+realname=kde4-windeco-domino
+pkgver=0.4
+pkgrel=5
+pkgdesc="Domino window decoration,port to KDE4"
+groups=('adslgr-kde4decor' 'adslgr-kde4-eyecandy')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/Domino?content=95595"
+depends=('kdebase-workspace>=4.3.0')
+makedepends=('cmake' 'automoc4' 'gcc')
+conflicts=('kdedeco-domino-kde4')
+source=("http://www.kde-look.org/CONTENT/content-files/95595-kde4-windeco-domino-$pkgver.tar.bz2")
+license=('GPL')
+md5sums=('1520c6bb27685a387a56e4eeb9d8041c')
+
+build() {
+        cd $srcdir/${realname}-${pkgver}
+        cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .
+        make
+        make DESTDIR=$pkgdir install
+}

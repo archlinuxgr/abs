@@ -1,0 +1,24 @@
+# Contributor: Bart Verhoeven <nepherte at gmail dot com>
+pkgname=vdpauinfo
+pkgver=0.0.6
+pkgrel=4
+pkgdesc="A command line utility for querying the capabilities of a VDPAU device."
+arch=('i686' 'x86_64')
+url="http://cgit.freedesktop.org/~aplattner/vdpauinfo"
+license=('custom')
+depends=('nvidia-beta>=190.32')
+makedepends=('autoconf')
+source=('http://cgit.freedesktop.org/~aplattner/vdpauinfo/snapshot/vdpauinfo-0.0.6.tar.bz2')
+md5sums=('e8abff8c4822174f5956bb735c739db2')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+ 
+  autoreconf -i || return
+
+  ./configure --prefix=/usr VDPAU_CFLAGS=-I/usr/include VDPAU_LIBS=-lvdpau
+  make
+  make DESTDIR="$pkgdir" install
+  install -D -m644 $srcdir/$pkgname-$pkgver/LICENSE $pkgdir/usr/share/licenses/$pkgname/license
+}
+

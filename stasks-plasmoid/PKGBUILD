@@ -1,0 +1,28 @@
+pkgname=stasks-plasmoid
+realname=stasks
+pkgver=0.5.1
+pkgrel=6
+pkgdesc="A new, Windows 7 like, taskmanager for KDE4"
+conflicts="stasks-manager-plasmoid"
+groups=('adslgr-plasmoids')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php?content=99739"
+license=('GPL')
+replaces=("staks-plasmoid")
+depends=('kdebase-workspace>=4.5.0')
+makedepends=('cmake' 'automoc4' 'gcc')
+source=("http://www.kde-look.org:80/CONTENT/content-files/99739-${realname}-${pkgver}.tar.gz" "stasks-0.5.1-kde43.patch" "stasks-0.5.1-peek.patch")
+md5sums=('988d184cefb71568d4fe9b5fc63f6915'
+         'f19a01a4547075be0fd334b7972f017f'
+         '9de24f0866b687b101b92ebf332f39a7')
+
+
+build() {
+	cd ${srcdir}/${realname}-${pkgver}
+        patch -Np1 -i ${startdir}/stasks-0.5.1-kde43.patch
+	patch -Np1 -i ${startdir}/stasks-0.5.1-peek.patch
+  	cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`
+  	make
+  	make DESTDIR=${pkgdir} install
+}
+

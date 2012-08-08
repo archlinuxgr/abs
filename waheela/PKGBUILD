@@ -1,0 +1,22 @@
+# Contributor : ranger @ adslgr.com
+
+pkgname=waheela
+pkgver=0.3
+pkgrel=1
+arch=('i686' 'x86_64')
+pkgdesc="A program that offers a party mode for Amarok 2"
+url="http://www.kde-apps.org/content/show.php/?content=108863"
+license=('GPL')
+depends=('amarok>2.0')
+makedepends=('cmake' 'automoc4')
+
+source=("http://linux.wuertz.org/dists/sid/main/source/${pkgname}_${pkgver}.tar.gz")
+
+md5sums=('59862caa7e570ac60762f3022d60ad3e')
+
+build() {
+	cd $srcdir/${pkgname}
+	cmake  -DCMAKE_INSTALL_PREFIX=/usr
+	make VERBOSE=1
+	make DESTDIR=$pkgdir install
+}

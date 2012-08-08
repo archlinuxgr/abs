@@ -1,0 +1,22 @@
+# Contributor: ranger @ adslgr.com
+pkgname=favoriteapps-plasmoid
+realname=favoriteApps
+pkgver=0.2
+pkgrel=3
+pkgdesc="A plasmoid that shows the favorites from the kde4 kickoff menu"
+groups=('adslgr-plasmoids')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org:80/content/show.php?content=107514"
+depends=('kdebase-workspace>=4.3.0')
+makedepends=('cmake' 'automoc4' 'gcc')
+source=("http://www.kde-look.org:80/CONTENT/content-files/107514-${realname}.tar.gz")
+license=('GPL')
+md5sums=('8a503b8e4cb5122651206ff4ae961dfc')
+
+
+build() {
+  cd $srcdir/${realname}
+	cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE
+	make VERBOSE=1
+        make DESTDIR=$pkgdir install
+}

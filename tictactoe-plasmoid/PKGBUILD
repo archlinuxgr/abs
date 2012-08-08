@@ -1,0 +1,22 @@
+# Contributor: ranger @ adslgr.com
+pkgname=tictactoe-plasmoid
+realname=tictactoe
+pkgver=1.1
+pkgrel=1
+pkgdesc="A Tic Tac Toe game for your plasma desktop"
+groups=('adslgr-plasmoids')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org:80/content/show.php/TicTacToe+Plasmoid.?content=99329"
+depends=('kdebase-workspace>=4.3.0')
+makedepends=('cmake' 'automoc4' 'gcc')
+source=('http://www.kde-look.org:80/CONTENT/content-files/99329-tictactoe-1.0.tar.bz2')
+license=('GPL')
+md5sums=('bf571c72ecc85983bbd5642009568c9b')
+
+
+build() {
+  cd $srcdir/${realname}-1.0
+	cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE
+	make VERBOSE=1
+        make DESTDIR=$pkgdir install
+}

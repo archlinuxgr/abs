@@ -1,0 +1,25 @@
+# Contributor: WAntilles <wantilles@adslgr.com>
+
+pkgname=fatrat
+pkgver=1.1
+pkgrel=2
+pkgdesc="QT4 based download manager with support for HTTP, FTP, SFTP, BitTorrent, rapidshare and more"
+arch=('i686' 'x86_64')
+url="http://fatrat.dolezel.info/"
+license=('GPL')
+depends=('gloox' 'curl' 'qt' 'libtorrent-rasterbar')
+optdepends=('geoip: GeoIP support')
+makedepends=('asio' 'cmake' 'libssh2')
+conflicts=('fatrat-svn')
+install=fatrat.install
+source=(http://www.dolezel.info/download/data/fatrat/${pkgname}-${pkgver}.tar.gz)
+md5sums=('ce36c01747051ca2a190424d8a819df7')
+
+build() {
+  cd "$srcdir"/${pkgname}-${pkgver}
+
+  cmake . -DWITH_EVERYTHING=ON -DCMAKE_INSTALL_PREFIX=/usr
+  make
+  make DESTDIR="${pkgdir}" install
+}
+

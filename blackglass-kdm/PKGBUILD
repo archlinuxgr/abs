@@ -1,0 +1,19 @@
+#Contributor: ranger @ adslgr.com
+pkgname=blackglass-kdm
+realname=BlackGlass
+pkgver=1.0
+pkgrel=3
+pkgdesc="BlackGlass KDM theme"
+arch=('any')
+groups=('adslgr-kdm4' 'adslgr-kde4-eyecandy')
+url="http://www.kde-look.org/content/show.php/The+Ringer?content=110292"
+license=('LGPL')
+source=("http://adslgr64.tiven.org/sources/Black_Glass_KDM_Theme_${pkgver}-${pkgrel}.tar.gz")
+md5sums=('8abc90a68c6bb5ce33468a4fcea9c2f7')
+
+build() {
+  cd ${srcdir}/
+  mkdir -p $pkgdir/usr/share/apps/kdm/themes
+  mv ${realname}/ $pkgdir/usr/share/apps/kdm/themes
+}
+

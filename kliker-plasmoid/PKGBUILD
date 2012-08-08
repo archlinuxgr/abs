@@ -1,0 +1,22 @@
+# Contributor: ranger @ adslgr.com
+pkgname=klicker-plasmoid
+realname=klicker
+pkgver=0.1.1
+pkgrel=3
+pkgdesc="klicker is an icon application launcher, with zoom"
+groups=('adslgr-plasmoids')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/klicker?content=99554"
+depends=('kdebase-workspace>=4.3.0')
+makedepends=('cmake' 'automoc4' 'gcc')
+source=('http://www.kde-look.org/CONTENT/content-files/99554-klicker0.1.1.tar.gz')
+license=('GPL')
+md5sums=('dc85a5d583c3576dfac57825d7cee567')
+
+
+build() {
+  cd $srcdir
+	cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE
+	make VERBOSE=1
+        make DESTDIR=$pkgdir install
+}

@@ -1,0 +1,22 @@
+#Contributor: ranger @ adslgr.com
+pkgname=tragedy-plasmatheme
+realname=tragedy
+pkgver=2.0
+pkgrel=1
+pkgdesc="A clean, darkish theme for Plasma"
+groups=('adslgr-kde4-eyecandy' 'adslgr-kthemes')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/Tragedy?content=101707"
+depends=('kdebase-workspace>=4.2.0')
+conflicts=('tragedy-plasmatheme')
+source=("http://www.kde-look.org/CONTENT/content-files/101707-${realname}.tar.gz")
+license=('GPL')
+md5sums='ca413b261b5d841e02a2f16b6c3b3e7e'
+
+build()
+{
+  mkdir -p $pkgdir/usr/share/apps/desktoptheme
+  cd $srcdir
+  cp -R ${realname} $pkgdir/usr/share/apps/desktoptheme
+}
+

@@ -1,0 +1,20 @@
+#Contributor: ranger @ adslgr.com
+pkgname=glassified-splash
+realname=Glassified
+pkgver=1.2.2
+pkgrel=3
+pkgdesc="Glassified KSplash theme"
+arch=('any')
+groups=('adslgr-kde4-eyecandy' 'adslgr-ksplash')
+url="http://kde-look.org/content/show.php/Glassified+Splash?content=84124"
+license=('LGPL')
+source=("http://www.wochenendkommune.org/kde-look/${realname}-Splash.tar.gz")
+md5sums=('0f8c9084cb29a17fdd1520541183e5ba')
+
+build() {
+  mkdir -p $pkgdir/usr/share/apps/ksplash/Themes
+  cd $srcdir
+  cp -R ${realname} $pkgdir/usr/share/apps/ksplash/Themes
+
+}
+

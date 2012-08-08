@@ -1,0 +1,25 @@
+# Contributor: WAntilles <wantilles@adslgr.com>
+
+pkgname=eina-audio-player
+realname=eina
+pkgver=0.8.0
+pkgrel=1
+pkgdesc="A classic music player for a modern era"
+arch=('i686' 'x86_64')
+url="http://eina.sourceforge.net/"
+license=('GPL' 'LGPL')
+depends=('curl' 'gstreamer0.10' 'libnotify')
+makedepends=('intltool')
+options=('!libtool')
+source=(http://downloads.sourceforge.net/${realname}/${realname}-${pkgver}.tar.gz)
+md5sums=('b8b71a2ef5613b23faa104ea43ae34b5')
+
+build() {
+  cd ${srcdir}/${realname}-${pkgver}
+
+  ./configure --prefix=/usr --disable-static --enable-release-build
+
+  make CFLAGS="${CFLAGS}"
+  make DESTDIR="${pkgdir}" install
+}
+

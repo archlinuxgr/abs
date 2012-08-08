@@ -1,0 +1,23 @@
+#Contributor: Flamelab <panosfilip@gmail.com>
+pkgname=adslgr-abs
+pkgver=0.0.3.2.1beta
+_realver=0.0.3.2.1
+pkgrel=2
+pkgdesc="Utility that will help you create a local Archlinux Greece Project ABS tree."
+arch=('any')
+license=('GPL')
+depends=('git' 'wget' 'aria2')
+url="http://www.adslgr.com/forum/showthread.php?t=229249"
+source=(http://archlinuxgr.tiven.org/sources/$pkgname/$pkgname-$_realver.tar.xz)
+install=("adslgr-abs.install")
+
+build() {
+  cd ${srcdir}/$pkgname-$_realver
+  mkdir -p ${pkgdir}/usr/bin ${pkgdir}/etc ${pkgdir}/usr/share/archlinux-greece/common/
+  install -Dm755 adslgr-abs ${pkgdir}/usr/bin/
+  install -Dm644 adslgr-abs.conf ${pkgdir}/etc
+  install -Dm755 adslgr_abs_common_functions ${pkgdir}/usr/share/archlinux-greece/common/
+}
+
+
+md5sums=('8a278932ac6d8f16fcbca250119fbb5a')

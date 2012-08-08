@@ -1,0 +1,23 @@
+# Contributor: ranger @ adslgr.com
+pkgname=babeleo-plasmoid 
+realname=babeleo
+pkgver=0.5.1
+pkgrel=1
+pkgdesc="Simple plasmoid for fast translation of the clipboard content" 
+groups=('adslgr-plasmoids')
+arch=('i686' 'x86_64') 
+url="http://www.kde-look.org/content/show.php?content=110491" 
+depends=('kdebase-workspace>=4.3.0') 
+makedepends=('cmake' 'automoc4') 
+conflicts=('plasma-plasma-babeleo')
+source=("http://www.kde-look.org/CONTENT/content-files/110491-${realname}-${pkgver}.tar.gz") 
+license=('GPL') 
+md5sums=('b0270d5734ffd42f39da72a0884fb3ff')
+
+
+build() {
+  cd $srcdir/$realname-$pkgver
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=release 
+  make VERBOSE=1
+  make DESTDIR=$pkgdir install
+}

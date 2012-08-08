@@ -1,0 +1,28 @@
+# Contributor: Bendersteed
+# Current amd64 Maintainer: WAntilles <wantilles@adslgr.com>
+
+pkgname=plasma-icontasks
+pkgver=0.9.2
+pkgdesc="Modified version of KDE 4.7 taskbar applet and taskmanager library."
+pkgrel=1
+arch=(i686 x86_64)
+_kdeapps=144808
+url="http://kde-apps.org/content/show.php/Icon+Tasks?content=${_kdeapps}"
+license=(GPL)
+depends=('kdebase-workspace')
+makedepends=('cmake' 'automoc4')
+options=()
+source=(http://kde-apps.org/CONTENT/content-files/144808-${pkgname}-${pkgver}.tar.bz2)
+
+build(){
+  cd ${srcdir}/${pkgname}-${pkgver}
+  cmake -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
+  make
+}
+
+package(){
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR="${pkgdir}" install
+}
+

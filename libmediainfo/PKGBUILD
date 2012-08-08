@@ -1,0 +1,33 @@
+# Contributor:  hydro <hydro@freenet.de>
+
+pkgname=libmediainfo
+pkgver=0.7.27
+pkgrel=1
+pkgdesc="shared library for mediainfo"
+arch=('i686' 'x86_64')
+url="http://mediainfo.sourceforge.net"
+license=('GPL')
+depends=('zlib' 'libzen>=0.4.10')
+options=(!libtool)
+source=(http://downloads.sourceforge.net/mediainfo/${pkgname}_${pkgver}.tar.bz2)
+md5sums=('c0dfecba84421eb7c4697069e04ff08b')
+
+build() {
+  cd $srcdir/MediaInfoLib/Project/GNU/Library
+  chmod +x autogen
+  ./autogen
+  ./configure --prefix=/usr --enable-shared
+  make clean
+  make
+  make DESTDIR=$pkgdir install
+
+  for i in MediaInfo MediaInfoDLL; do
+    install -dm 755 $pkgdir/usr/include/$i
+    install -m 644 $srcdir/MediaInfoLib/Source/$i/*.h $pkgdir/usr/include/$i 
+  done
+
+  install -dm 755 $pkgdir/usr/lib/pkgconfig
+  install -m 644 $srcdir/MediaInfoLib/Project/GNU/Library/libmediainfo.pc $pkgdir/usr/lib/pkgconfig 
+  sed -i -e 's|Version: |Version: '$pkgver'|g' $pkgdir/usr/lib/pkgconfig/libmediainfo.pc
+
+}

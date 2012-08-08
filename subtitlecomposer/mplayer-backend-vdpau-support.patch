@@ -1,0 +1,112 @@
+diff -Naur old/subtitlecomposer-0.5.3/src/player/mplayer/mplayerconfig.h new/subtitlecomposer-0.5.3/src/player/mplayer/mplayerconfig.h
+--- old/subtitlecomposer-0.5.3/src/player/mplayer/mplayerconfig.h	2009-02-26 00:46:17.000000000 +0200
++++ new/subtitlecomposer-0.5.3/src/player/mplayer/mplayerconfig.h	2011-03-29 03:53:34.135714347 +0300
+@@ -61,6 +61,9 @@
+ 			QString inputConfigPath() const { return option( keyInputConfigPath() ); }
+ 			void setInputConfigPath( const QString& inputConfigPath ) { setOption( keyInputConfigPath(), inputConfigPath ); }
+ 
++			bool vdpauDivx() const { return optionAsBool( keyVdpauDivx() ); }
++			void setVdpauDivx( bool vdpauDivx ) { setOption( keyVdpauDivx(), vdpauDivx ); }
++
+ 			bool frameDropping() const { return optionAsBool( keyFrameDropping() ); }
+ 			void setFrameDropping( bool frameDropping ) { setOption( keyFrameDropping(), frameDropping ); }
+ 
+@@ -78,6 +81,7 @@
+ 			static const QString& keyCacheSize() { static const QString key( "CacheSize" ); return key; }
+ 			static const QString& keyVolumeNormalizationEnabled() { static const QString key( "VolumeNormalizationEnabled" ); return key; }
+ 			static const QString& keyInputConfigPath() { static const QString key( "InputConfigPath" ); return key; }
++			static const QString& keyVdpauDivx() { static const QString key( "VdpauDivx" ); return key; }
+ 			static const QString& keyFrameDropping() { static const QString key( "FrameDropping" ); return key; }
+ 			static const QString& keyHardFrameDropping() { static const QString key( "HardFrameDropping" ); return key; }
+ 			static const QString& keyAutoSyncFactor() { static const QString key( "AutoSyncFactor" ); return key; }
+@@ -101,6 +105,7 @@
+ 
+ 				defaults[keyInputConfigPath()] = KGlobal::dirs()->locate( "appdata", "input.conf" );
+ 
++				defaults[keyVdpauDivx()] = "false";
+ 				defaults[keyFrameDropping()] = "false";
+ 				defaults[keyHardFrameDropping()] = "false";
+ 				defaults[keyAutoSyncFactor()] = "";
+diff -Naur old/subtitlecomposer-0.5.3/src/player/mplayer/mplayerconfigwidget.cpp new/subtitlecomposer-0.5.3/src/player/mplayer/mplayerconfigwidget.cpp
+--- old/subtitlecomposer-0.5.3/src/player/mplayer/mplayerconfigwidget.cpp	2009-02-26 00:46:17.000000000 +0200
++++ new/subtitlecomposer-0.5.3/src/player/mplayer/mplayerconfigwidget.cpp	2011-03-29 03:53:34.139047681 +0300
+@@ -52,7 +52,10 @@
+ 	m_videoOutputComboBox = new KComboBox( false, videoGroupBox );
+ 	m_videoOutputComboBox->setEnabled( false );
+ 	m_videoOutputComboBox->setEditable( true );
+-	m_videoOutputComboBox->addItems( QString( "xv xvmc x11 gl gl2 sdl tdfxfb s3fb xover dga ggi fbdev fbdev2 v4l2 bl directfb dfbmga null" ).split( ' ' ) );
++	m_videoOutputComboBox->addItems( QString( "vdpau xv xvmc x11 gl gl2 sdl tdfxfb s3fb xover dga ggi fbdev fbdev2 v4l2 bl directfb dfbmga null" ).split( ' ' ) );
++
++	m_vdpauDivxCheckBox = new QCheckBox( videoGroupBox );
++	m_vdpauDivxCheckBox->setText( i18n( "Enable vdpau for DivX/XviD" ) );
+ 
+ 	m_frameDropCheckBox = new QCheckBox( videoGroupBox );
+ 	m_frameDropCheckBox->setText( i18n( "Allow frame dropping" ) );
+@@ -90,8 +93,9 @@
+ 	QGridLayout* videoLayout = createGridLayout( videoGroupBox );
+ 	videoLayout->addWidget( m_videoOutputCheckBox, 0, 0, Qt::AlignRight|Qt::AlignVCenter );
+ 	videoLayout->addWidget( m_videoOutputComboBox, 0, 1 );
+-	videoLayout->addWidget( m_frameDropCheckBox, 1, 0, 1, 2 );
+-	videoLayout->addWidget( m_hardFrameDropCheckBox, 2, 0, 1, 2 );
++	videoLayout->addWidget( m_vdpauDivxCheckBox, 1, 0, 1, 2 );
++	videoLayout->addWidget( m_frameDropCheckBox, 2, 0, 1, 2 );
++	videoLayout->addWidget( m_hardFrameDropCheckBox, 3, 0, 1, 2 );
+ 
+ 	QGridLayout* audioLayout = createGridLayout( audioGroupBox );
+ 	audioLayout->addWidget( m_audioOutputCheckBox, 0, 0, Qt::AlignRight|Qt::AlignVCenter );
+@@ -110,6 +114,7 @@
+ 	connect( m_avsyncCheckBox, SIGNAL( toggled(bool) ), this, SIGNAL( settingsChanged() ) );
+ 	connect( m_volumeNormalizationCheckBox, SIGNAL( toggled(bool) ), this, SIGNAL( settingsChanged() ) );
+ 	connect( m_videoOutputCheckBox, SIGNAL( toggled(bool) ), this, SIGNAL( settingsChanged() ) );
++	connect( m_vdpauDivxCheckBox, SIGNAL( toggled(bool) ), this, SIGNAL( settingsChanged() ) );
+ 	connect( m_frameDropCheckBox, SIGNAL( toggled(bool) ), this, SIGNAL( settingsChanged() ) );
+ 	connect( m_hardFrameDropCheckBox, SIGNAL( toggled(bool) ), this, SIGNAL( settingsChanged() ) );
+ 	connect( m_audioOutputComboBox, SIGNAL( textChanged(const QString&) ), this, SIGNAL( settingsChanged() ) );
+@@ -132,6 +137,7 @@
+ 	config()->setAutoSyncFactor( m_avsyncCheckBox->isChecked() ? m_avsyncSpinBox->value() : -1 );
+ 
+ 	config()->setVideoOutput( m_videoOutputCheckBox->isChecked() ? m_videoOutputComboBox->currentText() : QString() );
++	config()->setVdpauDivx( m_vdpauDivxCheckBox->isChecked() );
+ 	config()->setFrameDropping( m_frameDropCheckBox->isChecked() );
+ 	config()->setHardFrameDropping( m_hardFrameDropCheckBox->isChecked() );
+ }
+@@ -154,6 +160,7 @@
+ 	if ( m_videoOutputCheckBox->isChecked() )
+ 		m_videoOutputComboBox->setEditText( config()->videoOutput() );
+ 
++	m_vdpauDivxCheckBox->setChecked( config()->vdpauDivx() );
+ 	m_frameDropCheckBox->setChecked( config()->frameDropping() );
+ 	m_hardFrameDropCheckBox->setChecked( config()->hardFrameDropping() );
+ }
+diff -Naur old/subtitlecomposer-0.5.3/src/player/mplayer/mplayerconfigwidget.h new/subtitlecomposer-0.5.3/src/player/mplayer/mplayerconfigwidget.h
+--- old/subtitlecomposer-0.5.3/src/player/mplayer/mplayerconfigwidget.h	2009-02-26 00:46:17.000000000 +0200
++++ new/subtitlecomposer-0.5.3/src/player/mplayer/mplayerconfigwidget.h	2011-03-29 03:53:34.139047681 +0300
+@@ -55,6 +55,7 @@
+ 
+ 		private:
+ 
++			QCheckBox* m_vdpauDivxCheckBox;
+ 			QCheckBox* m_frameDropCheckBox;
+ 			QCheckBox* m_hardFrameDropCheckBox;
+ 			KComboBox* m_videoOutputComboBox;
+diff -Naur old/subtitlecomposer-0.5.3/src/player/mplayer/mplayerprocess.cpp new/subtitlecomposer-0.5.3/src/player/mplayer/mplayerprocess.cpp
+--- old/subtitlecomposer-0.5.3/src/player/mplayer/mplayerprocess.cpp	2009-02-26 00:46:17.000000000 +0200
++++ new/subtitlecomposer-0.5.3/src/player/mplayer/mplayerprocess.cpp	2011-03-29 03:55:20.242381013 +0300
+@@ -80,7 +80,17 @@
+ 	args << "-slave"; // enable slave mode so we can sent commands to mplayer process
+ 
+ 	if ( m_config->hasVideoOutput() )
++	{	
+ 		args << "-vo" << m_config->videoOutput();
++		if ( m_config->videoOutput() == "vdpau" )
++		{
++			args << "-vc";
++			if ( m_config->vdpauDivx() )
++				args << "ffh264vdpau,ffmpeg12vdpau,ffwmv3vdpau,ffvc1vdpau,ffodivxvdpau,";
++			else
++				args << "ffh264vdpau,ffmpeg12vdpau,ffwmv3vdpau,ffvc1vdpau,";
++		}
++	}
+ 
+ 	if ( m_config->hasAudioOutput() )
+ 		args << "-ao" << m_config->audioOutput();

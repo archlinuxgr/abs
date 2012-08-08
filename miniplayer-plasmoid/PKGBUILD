@@ -1,0 +1,22 @@
+# Contributor: ranger @ adslgr.com
+pkgname=miniplayer-plasmoid
+realname=miniplayer
+pkgver=1.0
+pkgrel=3
+pkgdesc="Plasmoid to play multimedia using Phonon"
+groups=('adslgr-plasmoids')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/Mini+Player?content=95501"
+depends=('kdebase-workspace>=4.3.0' 'phonon')
+makedepends=('cmake' 'automoc4' 'gcc' 'phonon')
+source=("http://www.kde-look.org/CONTENT/content-files/95501-miniplayer-${pkgver}.tar.bz2")
+license=('GPL')
+md5sums=('d9dfffedb17b6de7c22416b9f8d4743d')
+
+
+build() {
+  cd $srcdir/${realname}-${pkgver}
+	cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE
+	make VERBOSE=1
+        make DESTDIR=$pkgdir install
+}

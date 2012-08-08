@@ -1,0 +1,22 @@
+pkgname=nitrogen-kde4style
+realname=kde4-kstyle-nitrogen
+pkgver=1.0.4
+pkgrel=1
+pkgdesc="A temporary fork of the Oxygen widget style for KDE4"
+groups=('adslgr-kstyles' 'adslgr-kde4-eyecandy')
+arch=("i686" "x86_64")
+url="http://www.kde-look.org/content/show.php/Nitrogen-stlye?content=112652"
+license=("GPL")
+depends=('kdebase-plasma>=4.3.0')
+makedepends=("cmake" "automoc4" "gcc")
+conflicts=("kde4-kstyle-nitrogen")
+source=("http://www.kde-look.org/CONTENT/content-files/112652-${realname}-${pkgver}-Source.tar.gz")
+md5sums=('8e5e352520de7355a3a54c16bafaeb16')
+
+build() {
+	cd ${srcdir}/${realname}-${pkgver}-Source
+        cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release . 
+        make
+	make DESTDIR=$pkgdir install
+}
+

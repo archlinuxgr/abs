@@ -1,0 +1,19 @@
+------------------------------------------------------------------------------
+pkgver 138-3 | WAntilles | 2011-03-21 (Mon, 21 Mar 2011)
+
+Included patch to display Matroska container chapter names.
+
+http://smplayer.berlios.de/forum/viewtopic.php?f=4&t=661
+
+Patch by dikei for smplayer, modified, for umplayer.
+
+Included patch - with GUI - to optionally enable VDPAU DivX/XviD decoding, when VDPAU is
+the selected output, through an option in the smplayer.ini file as shown in:
+
+http://smplayer.berlios.de/forum/viewtopic.php?f=4&t=285
+
+By default, it is disabled.
+
+Patch modified for umplayer
+------------------------------------------------------------------------------
+

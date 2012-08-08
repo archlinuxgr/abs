@@ -1,0 +1,27 @@
+#CONTRIBUTOR: Zephyr
+# Maintainer: ranger @ adslgr.com
+
+pkgname=container-plasmoid
+realname=container
+pkgver=0.1
+pkgrel=1
+pkgdesc="Plasmoid to group other plasmoids"
+groups=('adslgr-plasmoids')
+url="http://www.kde-look.org/content/show.php/Container?content=112094"
+arch=('i686' 'x86_64')
+license=('GPL')
+depends=('kdebase-workspace>=4.3')
+makedepends=('cmake' 'automoc4')
+conflicts=(container)
+replaces=(container)
+source=("http://www.kde-look.org/CONTENT/content-files/112094-${realname}-${pkgver}.tar.bz2")
+md5sums=('08302f6b0007beaa65fb73b83481396c')
+
+build() {
+  cd ${srcdir}/${realname}
+
+  cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`
+
+  make
+  make DESTDIR=${pkgdir} install
+}

@@ -1,0 +1,26 @@
+post_install() {
+  echo '>>> You might have to enable the plugin manually via yours file manager settings'
+  echo '>>> e.g. for Dolphin: Settings > General > Previews (Check the "Comic Book" box)'
+  echo '>>> You may also have to adjust 'Maximum File Size' to an appropriate value (say, 40 MB)'
+  echo '>>> for the plugin to work on your large comic files.'
+/bin/true
+}
+
+# arg 1:  the new package version
+# arg 2:  the old package version
+post_upgrade() {
+  echo '>>> You might have to enable the plugin manually via yours file manager settings'
+  echo '>>> e.g. for Dolphin: Settings > General > Previews (Check the "Comic Book" box)'
+  echo '>>> You may also have to adjust 'Maximum File Size' to an appropriate value (say, 40 MB)'
+  echo '>>> for the plugin to work on your large comic files.'
+/bin/true
+}
+
+# arg 1:  the old package version
+post_remove() {
+  /bin/true
+}
+
+op=$1
+shift
+$op $*

@@ -1,0 +1,22 @@
+# Contributor: Pawel Rusinek <p.rusinek@gmail.com>
+pkgname=griffith-extra-artwork
+pkgver=0.9.4
+pkgrel=1
+pkgdesc="Extra artwork for Griffith, the movie collection manager application"
+url="http://griffith.vasconunes.net/"
+license=""
+arch=('i686' 'x86_64')
+depends=('griffith>=0.9')
+makedepends=()
+conflicts=()
+replaces=()
+backup=()
+install=
+source=(http://download.berlios.de/griffith/${pkgname}-${pkgver}.tar.gz)
+md5sums=('a18f9f900dc467f8ee801bb70776072f')
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install
+}
+

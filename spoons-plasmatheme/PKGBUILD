@@ -1,0 +1,25 @@
+#Contributor: ranger @ adslgr.com
+pkgname=spoons-plasmatheme
+realname=spoons
+pkgver=0.2
+pkgrel=2
+pkgdesc="Spoons plasmatheme for KDE4"
+groups=('adslgr-kde4-eyecandy' 'adslgr-kthemes')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/Spoons+Original?content=77690"
+depends=('kdebase-workspace>=4.2.0')
+conflicts=('plasma-theme-spoons')
+source=("http://www.kde-look.org:80/CONTENT/content-files/77690-spoons-0.2.tar.gz")
+license=('GPL')
+md5sums='484604198c88e4da8ff657fba659af9f'
+
+build()
+{
+  mkdir -p $pkgdir/usr/share/apps/desktoptheme
+  cd $srcdir/spoons
+  rm CHANGELOG
+  rm CMakeLists.txt
+  rm Licence
+  cd $srcdir
+  cp -R spoons $pkgdir/usr/share/apps/desktoptheme
+}

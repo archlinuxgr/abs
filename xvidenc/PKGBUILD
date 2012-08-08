@@ -1,0 +1,22 @@
+# Contributor: Matthew Traynier <moltenrabbit@googlemail.com>
+# Maintained: Stefan Clarke <fm0nk3y@yahoo.co.uk> as of 16/11/07
+pkgname=xvidenc
+pkgver=7.8.7
+pkgrel=1
+pkgdesc="Advanced shell script for encoding DVDs or video files to the XviD format using the encoding utility MEncoder from MPlayer."
+arch=('i686' 'x86_64')
+url="http://sourceforge.net/projects/xvidenc/"
+license=('GPL')
+depends=('mplayer' 'xvidcore>=1.1.0' 'lsdvd' 'lame')
+install=${pkgname}.install
+source=(http://switch.dl.sourceforge.net/sourceforge/xvidenc/${pkgname}-${pkgver}.tar.gz)
+md5sums=('973b647911f87c2726ab132df7a3bce6')
+
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  sed -i -e "s|/usr|${pkgdir}/usr|g" \
+        -e 's|usr/local/|usr/|g' install
+  ./install
+}
+

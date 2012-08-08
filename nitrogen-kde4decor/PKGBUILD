@@ -1,0 +1,22 @@
+#Contributor: ranger @ adslgr.com
+pkgname=nitrogen-kde4decor
+realname=kde4-windeco-nitrogen
+pkgver=3.3.0
+pkgrel=2
+pkgdesc="A fork of the oxygen/ozone decoration with more options"
+groups=('adslgr-kde4decor' 'adslgr-kde4-eyecandy')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/Nitrogen?content=99551"
+depends=('kdebase-workspace>=4.3.0')
+makedepends=('cmake' 'automoc4' 'gcc')
+conflicts=("kdedecor-nitrogen-kde4")
+source=("http://www.kde-look.org/CONTENT/content-files/99551-kde4-windeco-nitrogen-${pkgver}-Source.tar.gz")
+license=('GPL')
+md5sums=('50ffd9d51d7e7c72338f15ce7d1443a3')
+
+build() {
+        cd $srcdir/${realname}-${pkgver}-Source
+        cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .
+        make
+        make DESTDIR=$pkgdir install
+}

@@ -1,0 +1,20 @@
+#Contributor: ranger @ adslgr.com
+pkgname=ringer-splash
+realname=rngsplsh
+pkgver=7
+pkgrel=4
+pkgdesc="Ringer KSplash theme"
+arch=('any')
+groups=('adslgr-kde4-eyecandy' 'adslgr-ksplash')
+url="http://www.kde-look.org/content/show.php/Ringer+Splash+?content=109115"
+license=('Artistic 2.0')
+source=("http://www.adslgr64.tiven.org/sources/${realname}.tar.gz")
+md5sums=('cd32029127ee1311ec6f772314f57541')
+
+build() {
+  mkdir -p $pkgdir/usr/share/apps/ksplash/Themes/Ringer
+  cd $srcdir
+  cp -R ${realname}/* $pkgdir/usr/share/apps/ksplash/Themes/Ringer/
+
+}
+

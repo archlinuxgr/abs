@@ -1,0 +1,22 @@
+# Contributor: ranger @ adslgr.com
+pkgname=playwolf-plasmoid
+realname=playwolf
+pkgver=0.7.2
+pkgrel=3
+pkgdesc="A plasmoid to control and a visualizer of informations about the songs for amarok 2.0"
+groups=('adslgr-plasmoids')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org:80/content/show.php?content=93882"
+depends=('kdebase-workspace>=4.3.0')
+makedepends=('cmake' 'automoc4' 'gcc')
+source=("http://playwolf.googlecode.com/files/${realname}-${pkgver}.tar.bz2")
+license=('GPL')
+md5sums=('0f9f051aa5e1762ad5bbad0197d3bedf')
+
+
+build() {
+  cd $srcdir/$realname
+	cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE
+	make VERBOSE=1
+        make DESTDIR=$pkgdir install
+}

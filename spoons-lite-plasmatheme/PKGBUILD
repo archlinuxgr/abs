@@ -1,0 +1,24 @@
+#Contributor: ranger @ adslgr.com
+pkgname=spoons-lite-plasmatheme
+realname=spoons-lite
+pkgver=0.4
+pkgrel=2
+pkgdesc="a bit less bold version of the original Spoons theme"
+groups=('adslgr-kde4-eyecandy' 'adslgr-kthemes')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/Spoons+Lite?content=99442"
+depends=('kdebase-workspace>=4.2.0')
+source=("http://www.kde-look.org:80/CONTENT/content-files/99442-${realname}.tar.gz")
+license=('GPL')
+md5sums='a736e75d42531e6ddcdce351181019c0'
+
+build()
+{
+  mkdir -p $pkgdir/usr/share/apps/desktoptheme
+  cd $srcdir/${realname}
+  rm CHANGELOG
+  rm CMakeLists.txt
+  rm LICENSE
+  cd $srcdir
+  cp -R ${realname} $pkgdir/usr/share/apps/desktoptheme
+}

@@ -1,0 +1,25 @@
+post_install() {
+  echo '>>> Remember to run '
+  echo '>>> cp /usr/share/apps/yasp-scripted/yasp_scripts/systemmonitor.script $HOME/.yasp.script'
+  echo '>>> as user after installing plasmoid to have the basic script copied to your home directory'
+  echo '>>> For instructions on how to modify it according to your needs, read /usr/share/apps/yasp-scripted/README.syntax'
+  echo '>>> Also, you can find more sample scripts under /usr/share/apps/yasp-scripted/yasp_scripts/dunkan-yasps-scripts'
+/bin/true
+}
+
+# arg 1:  the new package version
+# arg 2:  the old package version
+post_upgrade() {
+  echo '>>> You can find more sample scripts under /usr/share/apps/yasp-scripted/yasp_scripts/dunkan-yasps-scripts'
+  echo '>>> For instructions on how to modify the scripts according to you needs, have a look at /usr/share/apps/yasp-scripted/README.syntax'
+/bin/true
+}
+
+# arg 1:  the old package version
+post_remove() {
+  /bin/true
+}
+
+op=$1
+shift
+$op $*

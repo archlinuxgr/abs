@@ -1,0 +1,20 @@
+#Contributor: ranger @ adslgr.com
+pkgname=blackglass-splash
+realname=BlackGlass
+pkgver=1.0
+pkgrel=2
+pkgdesc="Black Glass KSplash theme"
+arch=('any')
+groups=('adslgr-kde4-eyecandy' 'adslgr-ksplash')
+url="http://www.kde-look.org/content/show.php/Ringer+Splash+?content=110449"
+license=('LGPL')
+source=("http://www.adslgr64.tiven.org/sources/${realname}.tar.gz")
+md5sums=('539d97ed1dcb6749ba8c409c8585db50')
+
+build() {
+  mkdir -p $pkgdir/usr/share/apps/ksplash/Themes/
+  cd $srcdir
+  cp -R ${realname} $pkgdir/usr/share/apps/ksplash/Themes/
+
+}
+

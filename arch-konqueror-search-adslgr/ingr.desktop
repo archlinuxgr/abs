@@ -1,0 +1,8 @@
+[Desktop Entry]
+Charset=ISO 8859-7
+Hidden=false
+Keys=ingr
+Name=in.gr Dictionary
+Query=http://dictionary.in.gr/?searchText=\{{@}
+ServiceTypes=SearchProvider
+Type=Service

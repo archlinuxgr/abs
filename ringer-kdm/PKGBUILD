@@ -1,0 +1,19 @@
+#Contributor: ranger @ adslgr.com
+pkgname=ringer-kdm
+realname=ringedkdm
+pkgver=3
+pkgrel=2
+pkgdesc="Ringed KDM theme"
+arch=('any')
+groups=('adslgr-kdm4' 'adslgr-kde4-eyecandy')
+url="http://www.kde-look.org/content/show.php/The+Ringer?content=109079"
+license=('Artistic 2.0')
+source=("http://adslgr64.tiven.org/sources/${realname}.tar.gz")
+md5sums=('b48f534307e7cdd80880180c0c22cdbe')
+
+build() {
+  cd ${srcdir}/
+  mkdir -p $pkgdir/usr/share/apps/kdm/themes
+  mv ${realname}/ $pkgdir/usr/share/apps/kdm/themes
+}
+

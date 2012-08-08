@@ -1,0 +1,52 @@
+# Contributor: Fedor Suchkov <f.suchkov@gmail.com>
+# Maintainer: (epsilom) Xavier Corredor <xavier.corredor.llano (a) gmail.com>
+# Adslgr64 Maintainer: Flamelab <panosfilip@gmail.com>
+
+pkgname=rekonq-git
+pkgver=20110424
+pkgrel=1
+pkgdesc="rekonq is a KDE web browser based on QtWebKit."
+arch=('i686' 'x86_64')
+url="http://rekonq.sourceforge.net/"
+license=('GPL')
+groups=()
+depends=('kdelibs>=4.5' 'qt>=4.7')
+makedepends=('cmake' 'automoc4' 'git')
+provides=('rekonq')
+conflicts=('rekonq')
+
+_gitroot="git://anongit.kde.org/rekonq.git"
+_gitname="rekonq"
+
+
+build(){
+
+    cd ${srcdir}/
+
+    msg "Connecting to the GIT server...."
+    if [[ -d ${srcdir}/${_gitname} ]] ; then
+    	cd ${_gitname}
+    	git pull origin
+    	msg "The local files are updated..."
+    else
+    	git clone --depth=1 ${_gitroot}
+    fi
+    
+    msg "GIT checkout done."
+
+    msg "Starting make for: ${pkgname}"
+    
+    if [[ -d ${srcdir}/${_gitname}-build ]]; then
+       msg "Cleaning the previous build directory..." 
+       rm -rf ${srcdir}/${_gitname}-build
+    fi
+
+    cp -r ${srcdir}/${_gitname} ${srcdir}/${_gitname}-build
+    
+    cd ${srcdir}/${_gitname}-build
+	
+	cmake -DCMAKE_INSTALL_PREFIX=/usr .
+	make
+	make DESTDIR="$pkgdir/" install
+}
+ 

@@ -1,0 +1,19 @@
+# Maintainer:  ranger @ adslgr.com
+
+pkgname=fotowall
+realpkgname=Fotowall
+pkgver=0.9
+pkgrel=2
+pkgdesc="A tool for rendering collages from your favorite photos or pictures"
+arch=('i686' 'x86_64')
+url="http://www.enricoros.com/opensource/fotowall/"
+license=('GPL')
+depends=('openssl' 'qt>=4.4')
+source=(http://${pkgname}.googlecode.com/files/${realpkgname}-${pkgver}.tar.bz2)
+
+build() { 
+  cd "$srcdir/${realpkgname}-$pkgver"
+  qmake && make
+  make INSTALL_ROOT="$pkgdir" install
+}
+md5sums=('142ef697332e0777c6d22c5bc96cc438')

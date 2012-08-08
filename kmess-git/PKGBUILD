@@ -1,0 +1,74 @@
+# Contributor: rangergr@archlinux.gr
+ pkgname=kmess-git
+ pkgver=20110412
+ pkgrel=3
+ pkgdesc="A full-featured MSN Client for KDE - Development version (stable)"
+ url="http://www.kmess.org/"
+ arch=(i686 x86_64)
+ license=("GPL")
+ changelog=("ChangeLog")
+ #options=('force')
+ depends=("kdelibs>=4.5" "qca-ossl" "libxss" "libxslt")
+ makedepends=("cmake" "git" "automoc4" "cmake" "docbook-xml" "docbook-xsl")
+ optdepends=('cabextract: Winks support'
+            'flashplugin: Winks support'
+	    'kdebase-lib: Send files from dolphin using kmess')
+ provides=("kmess")
+ conflicts=("kmess" "kmess2" "kmess2.0.x-git" "kmess-svn-stable" "kmess-svn" "libisf-qt-git" "libmimic-qt-git" "kmess-git-unstable")
+ replaces=("kmess2" "kmess2.0.x-git" "kmess-svn-stable" "kmess-svn")
+ install=kmess.install
+ 
+_gitroot="git://gitorious.org/kmess/kmess.git"
+_gitbranch=kmess-2.0.x
+_gitname=kmess-git
+
+build() {
+#  rm ${startdir}/ChangeLog
+  msg "Connecting to GIT server...."
+
+  if [ -d "$srcdir"/"$_gitname" ] ; then
+    cd "$srcdir"/"$_gitname" && git pull origin
+    msg "The local files are updated."
+  else
+    git clone "$_gitroot" "$_gitname"
+  fi
+
+  msg "GIT checkout done or server timeout"
+
+  rm -rf "$srcdir"/"$_gitbranch"
+  cp -r "$srcdir"/"$_gitname" "$srcdir"/"$_gitbranch"
+
+  msg "Selecting a branch: "$_gitbranch""
+  cd "$srcdir"/"$_gitbranch"
+  git checkout -b "$_gitbranch" origin/"$_gitbranch"
+  git submodule init
+  git submodule update
+
+
+  msg "Starting make..."
+
+  rm -rf "$srcdir"/build
+  mkdir "$srcdir"/build
+  cd "$srcdir"/build
+
+# ChangeLog
+  cd "$startdir"/src/kmess-2.0.x/
+  rm "$startdir"/ChangeLog
+  head -n40 "$startdir"/src/kmess-2.0.x/ChangeLog >> "$startdir"/ChangeLog
+  cd "$srcdir"/build
+
+  #
+  # BUILD HERE
+  #
+
+  cmake ../"$_gitbranch" \
+    -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` \
+    -DCMAKE_BUILD_TYPE=Release
+  make
+}
+
+package() {
+  cd "$srcdir"/build
+  make DESTDIR="$pkgdir" install
+  cp -f "$startdir"/background.png "$pkgdir"/usr/share/apps/kmess/pics/
+}

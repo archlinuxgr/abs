@@ -1,0 +1,21 @@
+#Contributor: ranger @ adslgr.com
+pkgname=blackglass-plasmatheme
+realname=BlackGlass
+pkgver=1.0.2
+pkgrel=1
+pkgdesc="BlackGlass  plasmatheme for KDE4"
+groups=('adslgr-kde4-eyecandy' 'adslgr-kthemes')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/Glassified?content=110034"
+depends=('kdebase-workspace>=4.2.0')
+conflicts=('plasma-theme-glassified')
+source=("http://www.kde-look.org/CONTENT/content-files/110034-${realname}.tar.gz")
+license=('GPL')
+md5sums='856afd48049fbb55158f2b86641888b3'
+
+build()
+{
+  mkdir -p $pkgdir/usr/share/apps/desktoptheme
+  cd $srcdir
+  cp -R ${realname} $pkgdir/usr/share/apps/desktoptheme
+}

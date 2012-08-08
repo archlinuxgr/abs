@@ -1,0 +1,60 @@
+#Contributor: rangergr@archlinux.gr
+pkgname=amarok-git
+pkgver=20111207
+pkgrel=1
+mysqlver=5.5.18
+lateststablever=2.4.3
+pkgdesc="amaroK - a media player for KDE"
+arch=("i686" "x86_64")
+url="http://amarok.kde.org"
+license=('GPL2' 'LGPL2' 'FDL')
+depends=("mysql>=${mysqlver}" "libmysqlclient>=${mysqlver}" "taglib-extras"  "qtscriptgenerator" "libmp4v2" "liblastfm" "libofa") 
+makedepends=('git' 'automoc4' 'cmake' 'libgpod' 'libmtp' 'loudmouth')
+install=amarok.install
+optdepends=('libmtp: support for portable media devices'
+	    'libgpod: support Apple iPod audio devices'
+	    'loudmouth: backend needed by mp3tunes for syncing'
+            'qca: for ampache support')
+conflicts=('amarok' 'amarok2' 'amarok2-svn')
+replaces=(amarok-svn)
+provides=("amarok=${lateststablever}")
+changelog="ChangeLog"
+
+_gitroot="git://anongit.kde.org/amarok.git"
+_gitname="amarok"
+
+
+build() {
+  msg "Connecting to GIT server...."
+
+  if [ -d "${srcdir}/${_gitname}" ] ; then
+    cd ${_gitname} && git pull origin
+  else
+    git clone ${_gitroot}
+  fi
+
+  msg "GIT checkout done or server timeout"
+  msg "Starting make..."
+
+# ChangeLog
+   rm ${startdir}/ChangeLog
+   cd ${srcdir}/amarok
+   head -n90 ChangeLog >> ${startdir}/ChangeLog
+
+## Cover Bling
+  cd ${srcdir}/amarok/src/context/applets/
+  cp -rf ${srcdir}/amarok/playground/src/context/applets/coverbling ${srcdir}/amarok/src/context/applets/
+  echo "add_subdirectory( coverbling )" >> CMakeLists.txt
+
+  rm -rf ${srcdir}/build
+  mkdir -p ${srcdir}/build
+  cd ${srcdir}/build
+
+  cmake -DCMAKE_INSTALL_PREFIX=$( kde4-config --prefix ) -DCMAKE_BUILD_TYPE=Release ../${_gitname}
+
+  make
+  make DESTDIR=$pkgdir install
+
+  # One of libraries for strigi casuses problems with m4v files
+  rm -rf ${pkgdir}/usr/lib/strigi
+}

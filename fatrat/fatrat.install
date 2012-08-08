@@ -1,0 +1,6 @@
+
+post_install() {
+  echo "For GeoIP support (shows geographical position of IP adress)"
+  echo "install geoip package"
+}
+

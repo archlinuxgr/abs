@@ -1,0 +1,21 @@
+#Contributor: ranger @ adslgr.com
+pkgname=glassified-plasmatheme
+realname=Glassified
+pkgver=3.0.1
+pkgrel=1
+pkgdesc="A glassified  plasmatheme for KDE4"
+groups=('adslgr-kde4-eyecandy' 'adslgr-kthemes')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/Glassified?content=81388"
+depends=('kdebase-workspace>=4.2.0')
+conflicts=('plasma-theme-glassified')
+source=("http://www.kde-look.org/CONTENT/content-files/81388-${realname}.tar.gz")
+license=('GPL')
+md5sums='8c0763871be64396540d211f067864d2'
+
+build()
+{
+  mkdir -p $pkgdir/usr/share/apps/desktoptheme
+  cd $srcdir
+  cp -R ${realname} $pkgdir/usr/share/apps/desktoptheme
+}

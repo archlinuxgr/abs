@@ -1,0 +1,21 @@
+#Contributor: ranger @ adslgr.com
+pkgname=eleonora-plasmatheme
+realname=Eleonora
+pkgver=1.0
+pkgrel=1
+pkgdesc="A milky theme based on Glassified and Aya"
+groups=('adslgr-kde4-eyecandy' 'adslgr-kthemes')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/Eleonora?content=98341"
+depends=('kdebase-workspace>=4.2.0')
+source=("http://www.kde-look.org/CONTENT/content-files/98341-${realname}.tar.gz")
+license=('GPL')
+md5sums='560e4d14675abf477e6a9d1e9105d6db'
+
+build()
+{
+  mkdir -p $pkgdir/usr/share/apps/desktoptheme
+  cd $srcdir
+  cp -R ${realname} $pkgdir/usr/share/apps/desktoptheme
+}
+

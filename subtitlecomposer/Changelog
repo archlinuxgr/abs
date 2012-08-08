@@ -1,0 +1,16 @@
+------------------------------------------------------------------------------
+pkgver 0.5.3-8 | WAntilles | 2011-04-12 (Tue, 12 Apr 2011)
+
+Added patch to support multi-threading with the mplayer backend.
+Mplayer2 support included from previous patch.
+------------------------------------------------------------------------------
+pkgver 0.5.3-7 | WAntilles | 2011-03-31 (Thu, 31 Mar 2011)
+
+Added patch to support mplayer2 with the mplayer backend.
+VDPAU support included from previous patch.
+------------------------------------------------------------------------------
+pkgver 0.5.3-5 | WAntilles | 2011-03-26 (Sat, 26 Mar 2011)
+
+Added patch to support VDPAU decoding with the mplayer backend.
+------------------------------------------------------------------------------
+

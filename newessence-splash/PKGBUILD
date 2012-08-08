@@ -1,0 +1,21 @@
+#Contributor: ranger @ adslgr.com
+
+pkgname=newessence-splash
+realname=NewEssence
+pkgver=2.0
+pkgrel=1
+pkgdesc="NewEssence KSplash theme"
+arch=('any')
+groups=('adslgr-kde4-eyecandy' 'adslgr-ksplash')
+url="http://www.kde-look.org/content/show.php/NewEssence?content=114394"
+license=('GPL')
+source=("http://www.adslgr64.tiven.org/sources/${realname}_KSplash")
+
+build() {
+  mkdir -p $pkgdir/usr/share/apps/ksplash/Themes/
+  cd $srcdir
+  cp -R ${realname} $pkgdir/usr/share/apps/ksplash/Themes/
+
+}
+
+md5sums=('3193cabfa1a66f4997a0ac030035f903')

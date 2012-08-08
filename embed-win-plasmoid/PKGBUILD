@@ -1,0 +1,45 @@
+# Contributor: ranger @ adslgr.com
+pkgname=embed-win-plasmoid
+realname=embed-win
+pkgver=1079983
+pkgrel=1
+pkgdesc="Displays any application in a plasmoid window"
+groups=('adslgr-plasmoids')
+arch=('i686' 'x86_64')
+url="http://www.kde.org"
+depends=('kdebase-workspace>=4.3.0')
+makedepends=('cmake' 'automoc4' 'gcc' 'subversion')
+source=()
+license=('GPL')
+md5sums=()
+
+_svntrunk="svn://anonsvn.kde.org/home/kde/trunk/playground/base/plasma/applets/embed-win"
+_svnmod="embed-win"
+
+build()
+{
+	cd $srcdir
+	if [ -d $_svnmod/.svn ]; then
+		(cd $_svnmod && svn up)
+	else
+		svn co $_svntrunk --config-dir ./ $_svnmod
+	fi
+
+	msg "SVN checkout done or server timeout"
+
+	if [ -d $_svnmod-build ]; then
+		rm -rf $_svnmod-build
+	fi
+	cp -r $_svnmod $_svnmod-build
+
+	cd $_svnmod-build
+
+	mkdir cmake-build
+	cd cmake-build
+	cmake ../ \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_BUILD_TYPE=Release
+	make
+	make DESTDIR=$pkgdir install
+}
+

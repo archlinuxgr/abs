@@ -1,0 +1,22 @@
+#Contributor: ranger @ adslgr.com
+pkgname=crystal-kde4decor
+realname=crystal
+pkgver=2.0.5
+pkgrel=1
+pkgdesc="KDE window decoration, with pseudo-transparent titlebar, buttons and borders"
+groups=('adslgr-kde4decor' 'adslgr-kde4-eyecandy')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php?content=75140"
+depends=('kdebase-workspace>=4.3.0')
+makedepends=('cmake' 'automoc4' 'gcc')
+conflicts=('kdedecor-crystal-kde4')
+source=("http://www.kde-look.org/CONTENT/content-files/75140-crystal-$pkgver.tar.bz2")
+license=('GPL')
+md5sums=('259ee0ebe5af3c1d586c79e364e78103')
+
+build() {
+        cd $srcdir/${realname}-${pkgver}
+        cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .
+        make
+        make DESTDIR=$pkgdir install
+}

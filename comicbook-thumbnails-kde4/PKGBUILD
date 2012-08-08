@@ -1,0 +1,26 @@
+# Contributor: ranger @ adslgr.com
+
+pkgname=comicbook-thumbnails-kde4
+realpkgname=comicbook-thumbnails
+pkgver=0.1
+pkgrel=5
+pkgdesc="Plugin for KDE file managers to generate thumbnails for Comic Book files (.cbr, .cbz, .cbt)"
+arch=('i686' 'x86_64')
+url="http://kde-look.org/content/show.php/ComicBook+Thumbnail+Plugin?content=114266"
+depends=('kdebase-workspace' 'unrar')
+makedepends=('cmake' 'automoc4')
+conflicts=('comicbook-thumbnail-plugin')
+replaces=('comicbook-thumbnail-plugin')
+source=(http://bitbucket.org/qwertymaniac/comicbook-thumbnails/get/$realpkgname-$pkgver.tar.gz)
+install=('ComicThumbs.install')
+license=('GPL')
+md5sums=('8d02267dd7ebe91e9b69eda281171b5b')
+
+build() {
+  cd $srcdir/$realpkgname
+  mkdir build
+  cd build
+  cmake -DCMAKE_INSTALL_PREFIX='/usr' ../
+  make
+  make DESTDIR=$pkgdir install
+}

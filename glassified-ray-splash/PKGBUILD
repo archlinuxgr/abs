@@ -1,0 +1,20 @@
+#Contributor: ranger @ adslgr.com
+pkgname=glassified-ray-splash
+realname=Glassified-Ray
+pkgver=0.1
+pkgrel=3
+pkgdesc="KSplash screen for KDE4 based on glassified"
+arch=('any')
+groups=('adslgr-kde4-eyecandy' 'adslgr-ksplash')
+url="http://kde-look.org/content/show.php/Glassified+Ray?content=105244"
+license=('LGPL')
+source=("http://adslgr64.tiven.org/sources/${realname}.tar.gz")
+md5sums=("e19a36be5de450de736aef988543e828")
+
+build() {
+  mkdir -p $pkgdir/usr/share/apps/ksplash/Themes
+  cd $srcdir
+  cp -R ${realname} $pkgdir/usr/share/apps/ksplash/Themes
+
+}
+

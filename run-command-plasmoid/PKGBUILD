@@ -1,0 +1,23 @@
+# Contributor: ranger @ adslgr.com
+pkgname=run-command-plasmoid 
+realname=runcommand
+pkgver=2.1
+pkgrel=1
+pkgdesc="plasmoid to run commands with support for runners" 
+groups=('adslgr-plasmoids')
+arch=('i686' 'x86_64') 
+url="http://www.kde-look.org/content/show.php?content=91495" 
+depends=('kdebase-workspace>=4.3.0') 
+makedepends=('cmake' 'automoc4') 
+conflicts=('plasma-runcommand-plasmoid')
+source=("http://www.kde-look.org/CONTENT/content-files/91495-${realname}-${pkgver}.tar.bz2") 
+license=('GPL') 
+md5sums=('d9a5b05bce4d34307a74df3c56fca981')
+
+
+build() {
+  cd $srcdir/$realname-$pkgver
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=release 
+  make VERBOSE=1
+  make DESTDIR=$pkgdir install
+}

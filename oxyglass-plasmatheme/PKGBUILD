@@ -1,0 +1,22 @@
+#Contributor: ranger @ adslgr.com
+pkgname=oxyglass-plasmatheme
+realname=oxyglass
+pkgver=0.1
+pkgrel=2
+pkgdesc="A bit modified version of the original Oxygen theme"
+groups=('adslgr-kde4-eyecandy' 'adslgr-kthemes')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/Oxyglass?content=96513"
+depends=('kdebase-workspace>=4.2.0')
+conflicts=('plasma-theme-oxyglass')
+source=("http://www.kde-look.org/CONTENT/content-files/96513-Oxyglass.tar.gz")
+license=('GPL')
+md5sums='de1cf847cc9d2cf26dca5dae33dffb26'
+
+build()
+{
+  mkdir -p $pkgdir/usr/share/apps/desktoptheme
+  cd $srcdir
+  cp -R Oxyglass $pkgdir/usr/share/apps/desktoptheme
+}
+

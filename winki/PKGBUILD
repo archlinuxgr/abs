@@ -1,0 +1,21 @@
+# Maintainer: Eric Belanger <belanger@astro.umontreal.ca>
+# Contributor: William Rea <sillywilly@gmail.com>
+
+pkgname=winki
+pkgver=0.4.4
+pkgrel=1
+pkgdesc="Aims to be the easiest program for video encoding"
+arch=('i686' 'x86_64')
+url="http://www.winki-the-ripper.de"
+license="GPL"
+depends=('gnome-python' 'mplayer')
+install=$pkgname.install
+source=(http://www.winki-the-ripper.de/share/dist/winki-$pkgver.tar.gz)
+md5sums=('abd9e2f8104e28d4e86f66841183f5bf')
+
+build() {
+  cd $srcdir/winki-$pkgver
+  python setup.py install --root=$pkgdir
+  sed -i 's|Video;AudioVideoEditing;||' $pkgdir/usr/share/applications/$pkgname.desktop
+}
+

@@ -1,0 +1,22 @@
+# Contributor: ranger @ adslgr.com
+pkgname=fancytasks-plasmoid
+realname=fancytasks
+pkgver=0.9.8
+pkgrel=1
+pkgdesc="Plasmoid for fancy representing your tasks"
+groups=('adslgr-plasmoids')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/Fancy+Tasks?content=99737"
+depends=('kdebase-workspace>=4.3.0')
+makedepends=('cmake' 'automoc4' 'gcc')
+source=("http://www.kde-look.org:80/CONTENT/content-files/99737-${realname}-${pkgver}.tar.bz2")
+license=('GPL')
+md5sums=('8d91cfd5aa5ee8b35cb5ada3bb47043d')
+
+
+build() {
+  cd $srcdir/${realname}-${pkgver}
+	cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE
+	make VERBOSE=1
+        make DESTDIR=$pkgdir install
+}

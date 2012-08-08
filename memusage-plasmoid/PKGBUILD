@@ -1,0 +1,24 @@
+# Contributor: ranger @ adslgr.com
+
+pkgname=memusage-plasmoid
+realname=memusage
+pkgver=0.3.3
+pkgrel=1
+pkgdesc="Plasmoid to display RAM and swap usage"
+groups=('adslgr-plasmoids')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/memusage?content=86630"
+depends=('kdebase-workspace>=4.3.0')
+makedepends=('cmake' 'automoc4' 'gcc')
+conflicts=('plasmoid-memusage')
+source=("http://www.kde-look.org/CONTENT/content-files/86630-${realname}-${pkgver}.tar.gz")
+license=('GPL')
+md5sums=('d919e2a9157753ba44b6d040e4dd652d')
+
+
+build() {
+  cd $srcdir/${realname}
+	cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE
+	make VERBOSE=1
+        make DESTDIR=$pkgdir install
+}

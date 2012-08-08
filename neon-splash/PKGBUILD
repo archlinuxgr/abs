@@ -1,0 +1,20 @@
+#Contributor: ranger @ adslgr.com
+pkgname=neon-splash
+realname=neon-ksplash-blue-by-FRUiT
+pkgver=0.1
+pkgrel=2
+pkgdesc="Neon KSplash theme"
+arch=('any')
+groups=('adslgr-kde4-eyecandy' 'adslgr-ksplash')
+url="http://kde-look.org/content/show.php/Glassified+Splash?content=111200"
+license=('Free')
+source=("http://adslgr64.tiven.org/sources/${realname}.tar.gz")
+md5sums=('53eda7d9eb0b877a987e53b659d2fd7a')
+
+build() {
+  mkdir -p $pkgdir/usr/share/apps/ksplash/Themes/Neon
+  cd $srcdir
+  cp -R ${realname}/* $pkgdir/usr/share/apps/ksplash/Themes/Neon
+
+}
+

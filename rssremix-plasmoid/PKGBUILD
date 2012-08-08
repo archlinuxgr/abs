@@ -1,0 +1,22 @@
+# Contributor: ranger @ adslgr.com
+pkgname=rssremix-plasmoid
+realname=rssremix
+pkgver=0.2
+pkgrel=3
+pkgdesc="An animated RSS plasmoid based on rssnow"
+groups=('adslgr-plasmoids')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/rssremix?content=102542"
+depends=('kdebase-workspace>=4.3.0')
+makedepends=('cmake' 'automoc4' 'gcc')
+source=("http://www.kde-look.org:80/CONTENT/content-files/102542-${realname}-${pkgver}.tar.bz2")
+license=('GPL')
+md5sums=('060a2fd54fa53b24c36fe373a2e3374c')
+
+
+build() {
+  cd $srcdir/${realname}-${pkgver}
+	cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE
+	make VERBOSE=1
+        make DESTDIR=$pkgdir install
+}

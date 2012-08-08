@@ -1,0 +1,63 @@
+# Contributor: WAntilles <wantilles@adslgr.com>
+
+pkgname=kompozer
+pkgver=0.7.10
+pkgrel=4
+pkgdesc="A Dreamweaver style WYSIWYG web editor; Nvu unofficial bug-fix release"
+arch=(i686 x86_64)
+license=('GPL')
+url="http://www.kompozer.net/"
+depends=('gtk2' 'glib2' 'pango' 'nss' 'libxt' 'libidl2' 'libgnome')
+makedepends=('zip' 'pkg-config')
+replaces=('nvu')
+conflicts=('nvu')
+provides=('nvu=1.0')
+source=(http://downloads.sourceforge.net/kompozer/${pkgname}-${pkgver}dfsg-src.tar.gz kompozer-nonroot.tar.gz kompozer.desktop)
+md5sums=('422675f098bae8cbd1e4d35cae426855'
+         'd7057b5145870eefa31f41005ef77f87'
+         '783ec7cb74d5154b2f9ca54755c363cb')
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}/mozilla
+  
+  ./remove.nonfree
+  sed -i 's|^ac_add_options\ --enable-optimize.*|ac_add_options\ --enable-optimize="${CFLAGS}"|' .mozconfig
+  sed -i 's|^export CFLAGS="-DDEBIAN"|export CFLAGS="${CFLAGS}"|' .mozconfig
+  sed -i 's|^export CXXFLAGS="-DDEBIAN"|export CXXFLAGS="${CFLAGS}"|' .mozconfig
+  sed -i 's|^ac_add_options  --without-system-png|ac_add_options  --with-system-png|' .mozconfig
+  echo "ac_add_options --disable-xinerama" >> .mozconfig
+  ./configure --prefix=/usr
+
+  make
+  make DESTDIR=${pkgdir} install
+
+  # initialize some data so that nvu will run as a non-root user
+  cd $pkgdir/usr/lib/${pkgname}/
+  tar zxf $srcdir/kompozer-nonroot.tar.gz
+
+  # Remove common mozilla aclocal stuff
+  rm -rf ${pkgdir}/usr/share
+  rm -rf ${pkgdir}/usr/include
+  rm -rf ${pkgdir}/usr/lib/pkgconfig
+
+  # Remove non used nvu folders
+  rm -rf $pkgdir/usr/lib/${pkgname}/chrome/comm
+  rm -rf $pkgdir/usr/lib/${pkgname}/chrome/help
+  rm -rf $pkgdir/usr/lib/${pkgname}/chrome/embed-sample
+  rm -rf $pkgdir/usr/lib/${pkgname}/chrome/en-US
+  rm -rf $pkgdir/usr/lib/${pkgname}/chrome/cascades
+  rm -rf $pkgdir/usr/lib/${pkgname}/chrome/toolkit
+  rm -rf $pkgdir/usr/lib/${pkgname}/chrome/pipnss
+  rm -rf $pkgdir/usr/lib/${pkgname}/chrome/pippki
+  rm -rf $pkgdir/usr/lib/${pkgname}/chrome/tipoftheday
+  rm -rf $pkgdir/usr/lib/${pkgname}/chrome/classic
+
+  # put links & shortcut
+  install -m755 -dD $pkgdir/usr/share/applications
+  install -m644  $srcdir/kompozer.desktop $pkgdir/usr/share/applications/
+
+  #set firefox as a default browser
+  sed -i 's|"/usr/bin/x-www-browser"|"/opt/mozilla/bin/firefox"|g' ${pkgdir}/usr/lib/${pkgname}/defaults/profile/all.js
+  sed -i 's|"/usr/bin/x-www-browser"|"/opt/mozilla/bin/firefox"|g' ${pkgdir}/usr/lib/${pkgname}/defaults/pref/all.js
+}
+

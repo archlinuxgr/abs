@@ -1,0 +1,42 @@
+pkgname=umplayer-svn
+pkgver=180
+pkgrel=1
+realver=0.9.7
+pkgdesc="UMPlayer is the multimedia player that fills all your needs."
+arch=('i686' 'x86_64')
+url="http://www.umplayer.com/"
+license=('GPL')
+depends=('qt>=4.3' 'mplayer' 'xdg-utils')
+provides=("umplayer=${realver}")
+conflicts=('umplayer')
+install=$pkgname.install
+sourcetarballdir=http://archlinuxgr.tiven.org/sources
+source=(${sourcetarballdir}/${pkgname}-${pkgver}.tar.xz
+	umplayer-optionally-enable-vdpau-divx-decoder-ng.patch
+	umplayer-display-matroska-chapter-names-ng.patch)
+
+build() {
+  cd "$srcdir/trunk"
+
+  # give the option to enable vdpau divx decoding
+  patch -Np2 -i ${srcdir}/umplayer-optionally-enable-vdpau-divx-decoder-ng.patch
+
+  # display matroska container chapter names
+  # patch from dikei
+  # http://smplayer.berlios.de/forum/viewtopic.php?f=4&t=661
+  patch -Np2 -i ${srcdir}/umplayer-display-matroska-chapter-names-ng.patch
+
+  make PREFIX=/usr
+}
+
+package() {
+  cd "$srcdir/trunk"
+
+  make PREFIX=/usr DESTDIR="$pkgdir/" install
+
+  rm -fr "$pkgdir"/usr/share/umplayer/themes/*/.svn
+}
+
+md5sums=('6b54c76448fb4964edcc29585d41759c'
+         'eed4b56f18569169a30ad26252da2d36'
+         'a5b342586efcef306a813d5aac97e563')

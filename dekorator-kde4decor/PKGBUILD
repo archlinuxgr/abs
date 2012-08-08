@@ -1,0 +1,23 @@
+#Contributor: ranger @ adslgr.com
+pkgname=dekorator-kde4decor
+realname=dekorator
+pkgver=0.4.0.4
+pkgrel=1
+pkgdesc="Unofficial port of the "deKorator" window decoration engine to KDE4"
+groups=('adslgr-kde4decor' 'adslgr-kde4-eyecandy')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/Domino?content=87921"
+depends=('kdebase-workspace>=4.3.0')
+makedepends=('cmake' 'automoc4' 'gcc')
+conflicts=('kdedecor-dekorator-kde4')
+replaces=('kdedecor-dekorator-kde4')
+source=("http://www.kde-look.org/CONTENT/content-files/87921-${realname}-${pkgver}.tar.bz2")
+license=('GPL')
+md5sums=('3b0ed3cddb591e7ee2b7801393747e0a')
+
+build() {
+        cd $srcdir/${realname}-${pkgver}
+        cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .
+        make
+        make DESTDIR=$pkgdir install
+}

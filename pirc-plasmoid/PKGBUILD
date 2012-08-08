@@ -1,0 +1,24 @@
+# Contributor: ranger @ adslgr.com
+
+pkgname=pirc-plasmoid
+pkgver=beta3
+pkgrel=1
+realname=pirc
+pkgdesc="An IRC Plasmoid"
+groups=('adslgr-plasmoids')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php?content=108428"
+license=('GPL')
+depends=('kdebase-workspace>=4.3.0')
+makedepends=('cmake' 'automoc4')
+conflicts=('plasmoid-pirc')
+source=(http://www.kde-look.org/CONTENT/content-files/108428-${realname}_${pkgver}.tar.bz2)
+md5sums=('2098a1e4deb894c7df800069d5572522')
+
+
+build() {
+cd $srcdir/${realname}_${pkgver}
+	cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE
+	make VERBOSE=1
+        make DESTDIR=$pkgdir install
+}

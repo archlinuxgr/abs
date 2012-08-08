@@ -1,0 +1,61 @@
+# Contributor: Muhammad 'MJ' Jassim <UnbreakableMJ@gmail.com>
+# Contributor: Aaron 'venisonslurpee' Laursen <venisonslurpee@gmail.com> 
+# Contributor: Flamelab <panosfilip@gmail.com>
+
+pkgname=songbird-nightly
+pkgrel=1
+pkgdesc="Bleeding-edge Songbird, the digital desktop media player (jukebox) mashed-up with web browser, powered by Mozilla."
+arch=('i686' 'x86_64')
+url="http://www.songbirdnest.com/"
+license=('GPL2')
+depends=('libxrender' 'libxext' 'libx11' 'libxmu' \
+         'gstreamer0.10' 'gstreamer0.10-base' 'gtk2' 'libxt' \
+	 'sqlite3' 'nss' 'libidl2' 'gstreamer0.10-good-plugins')
+optdepends=('gstreamer0.10-bad-plugins' 'gstreamer0.10-ugly-plugins')
+provides=('songbird')
+conflicts=('songbird' 'songbird-bin' 'songbird-svn')
+install=(songbird-nightly.install)
+
+build() {
+  cd ${srcdir}/Songbird_build-${pkgver}
+  
+  install -d --group=users ${pkgdir}/opt/songbird
+  cp -a ${srcdir}/Songbird_build-${pkgver}/* \
+        ${pkgdir}/opt/songbird
+  chmod 755 ${pkgdir}/opt/songbird/songbird
+  chmod 755 ${pkgdir}/opt/songbird/songbird-bin
+  chmod 755 ${pkgdir}/opt/songbird/xulrunner/xulrunner
+  chmod 755 ${pkgdir}/opt/songbird/xulrunner/xulrunner-bin
+  chmod -R a+r ${pkgdir}/opt/songbird
+  install -D ${srcdir}/Songbird_build-${pkgver}/chrome/icons/default/default.xpm \
+  	     ${pkgdir}/usr/share/pixmaps/Songbird.xpm
+  install -D -m644 ${srcdir}/Songbird.desktop \
+  	     	   ${pkgdir}/usr/share/applications/Songbird.desktop
+  install --directory ${pkgdir}/usr/bin
+  
+  ## fixing the problem with system-wide installs:
+  find ${pkgdir}/opt/songbird -type d -exec chmod 755 {} \;
+  install --directory ${pkgdir}/usr/bin
+  install ${srcdir}/songbird-launcher.sh ${pkgdir}/usr/bin/songbird
+}
+
+_build_number()
+{
+wget -qO - \
+        http://developer.songbirdnest.com/builds/trunk/latest/info.txt \
+                                                  | grep "build.number" \
+                                                  | sed s'|songbird.build.number=||'
+}
+
+_realversion()
+{
+wget -qO - \
+        http://developer.songbirdnest.com/builds/trunk/latest/info.txt \
+                                                  | grep "songbird.version=" \
+                                                  | sed s'|songbird.version=||'
+}
+
+pkgver=`_build_number`
+_pkgver=`_realversion`
+source=(http://developer.songbirdnest.com/builds/trunk/latest/Songbird_${_pkgver}-${pkgver}_linux-${CARCH}.tar.gz \
+	Songbird.desktop songbird-launcher.sh)

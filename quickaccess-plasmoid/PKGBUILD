@@ -1,0 +1,22 @@
+# Contributor: ranger @ adslgr.com
+pkgname=quickaccess-plasmoid
+realname=plasma-widget-quickaccess
+pkgver=0.8.1
+pkgrel=3
+pkgdesc="a small applet designed for the panel to have quick access to the most used folders"
+groups=('adslgr-plasmoids')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/QuickAccess+(maintenance+fork)?content=101968"
+depends=('kdebase-workspace>=4.3.0')
+makedepends=('cmake' 'automoc4' 'gcc')
+source=("http://www.kde-look.org/CONTENT/content-files/101968-${realname}_${pkgver}.orig.tar.gz")
+license=('GPL')
+md5sums=('744f7d85662808869bf22eae53ca4660')
+
+
+build() {
+	cd $srcdir/${realname}-${pkgver}
+	cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE
+	make VERBOSE=1
+        make DESTDIR=$pkgdir install
+}

@@ -1,0 +1,33 @@
+# Maintainer: Geoffroy Carrier <geoffroy.carrier@koon.fr>
+# Previous Contributor: Thomas Jost <thomas.jost@gmail.com>
+
+pkgname=subdownloader
+pkgver=2.0.7
+pkgrel=1
+pkgdesc="Automatic download/upload of subtitles using fast hashing"
+arch=('i686' 'x86_64')
+url="http://www.subdownloader.net/"
+license=('GPL2')
+depends=('python' 'imdbpy' 'mmpython' 'pyqt')
+source=(http://launchpad.net/${pkgname}/trunk/${pkgver}/+download/${pkgname}_${pkgver}.tar.gz)
+md5sums=('00c68ef2189666c9b6c456d5600be7de')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  install -d "${pkgdir}/usr/share/${pkgname}"
+  install -d "${pkgdir}/usr/share/applications"
+  install -d "${pkgdir}/usr/bin"
+
+  install -Dm 644 "README" "${pkgdir}/usr/share/doc/${pkgname}/"
+
+  gzip "subdownloader.1"
+  install -Dm 644 "subdownloader.1.gz" "${pkgdir}/usr/share/man/man1/"
+
+  rm README subdownloader subdownloader.1.gz
+  cp -a * "${pkgdir}/usr/share/${pkgname}/"
+  chmod 755 "${pkgdir}/usr/share/${pkgname}/run.py"
+  ln -s "/usr/share/${pkgname}/run.py" "${pkgdir}/usr/bin/subdownloader"
+
+  install subdownloader.desktop "${pkgdir}/usr/share/applications/"
+}
+

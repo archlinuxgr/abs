@@ -1,0 +1,30 @@
+# Contributor: hydro <hydro@freenet.de>
+
+pkgname=mediainfo-gui
+pkgver=0.7.27
+pkgrel=1
+pkgdesc="GUI for mediainfo"
+arch=('i686' 'x86_64')
+url="http://mediainfo.sourceforge.net"
+license=('GPL')
+depends=('libmediainfo>=0.7.27' 'wxgtk' 'hicolor-icon-theme')
+install=mediainfo-gui.install
+source=(http://downloads.sourceforge.net/mediainfo/mediainfo_${pkgver}.tar.bz2)
+md5sums=('0826dcdfc6f6149813b0002576b3dc66')
+
+build() {
+  cd $srcdir/MediaInfo/Project/GNU/GUI
+  chmod +x autogen
+  ./autogen
+  ./configure --prefix=/usr
+  make
+  make DESTDIR=$pkgdir install
+
+  install -D -m 644 $srcdir/MediaInfo/Source/Ressource/Image/MediaInfo.png \
+                    $pkgdir/usr/share/icons/hicolor/128x128/apps/mediainfo.png
+  install -D -m 644 $srcdir/MediaInfo/Source/Ressource/Image/MediaInfo.png \
+                    $pkgdir/usr/share/pixmaps/mediainfo-gui.png
+  install -D -m 644 $srcdir/MediaInfo/Project/GNU/GUI/mediainfo-gui.desktop \
+                    $pkgdir/usr/share/applications/mediainfo-gui.desktop
+
+}

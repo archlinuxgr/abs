@@ -1,0 +1,21 @@
+#Contributor: ranger @ adslgr.com
+pkgname=oxyglass-more-plasmatheme
+realname=Oxyglass_More
+pkgver=0.2
+pkgrel=2
+pkgdesc="Oxyglass theme with some more customization and extra elements added"
+groups=('adslgr-kde4-eyecandy' 'adslgr-kthemes')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/Oxyglass+More?content=99879"
+depends=('kdebase-workspace>=4.2.0')
+source=("http://www.kde-look.org/CONTENT/content-files/99879-${realname}.tar.gz")
+license=('GPL')
+md5sums='a7a95bcc2c6dd1e1c652747d435b40bd'
+
+build()
+{
+  mkdir -p $pkgdir/usr/share/apps/desktoptheme
+  cd $srcdir
+  cp -R Oxyglass_More $pkgdir/usr/share/apps/desktoptheme
+}
+

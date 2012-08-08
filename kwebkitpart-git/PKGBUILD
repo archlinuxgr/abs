@@ -1,0 +1,39 @@
+# Maintainer: rangergr@archlinux.gr 
+
+pkgname=kwebkitpart-git
+pkgver=20111207
+pkgrel=1
+pkgdesc="Webkit part"
+url="http://techbase.kde.org/Projects/WebKit"
+arch=('i686' 'x86_64')
+license=('GPL')
+depends=('kdebase-runtime>=4.6.0')
+makedepends=('cmake' 'automoc4' 'subversion')
+provides=("kwebkitpart=1.1")
+conflicts=("webkit-kpart-svn" "webkitkde-svn" "kwebkitpart" "kwebkitpart-svn")
+replaces=('webkit-kpart-svn' 'webkitkde-svn' 'kwebkitpart-svn')
+source=()
+md5sums=()
+install='kwebkitpart-git.install'
+
+_gitroot="git://anongit.kde.org/kwebkitpart"
+_gitname="kwebkitpart"
+
+
+build() {
+cd $srcdir
+
+        if [[ -d $_gitname ]]; then
+             (cd $_gitname && git pull origin)
+        else
+             git clone $_gitroot $_gitname
+        fi
+	
+cd $_gitname
+
+rm -rf build
+mkdir build && cd build
+cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release .. 
+make
+make DESTDIR=${pkgdir} install
+}

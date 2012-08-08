@@ -1,0 +1,145 @@
+diff -Naur old/trunk/src/core.cpp med/trunk/src/core.cpp
+--- old/trunk/src/core.cpp	2011-04-05 23:40:20.000000000 +0300
++++ med/trunk/src/core.cpp	2011-04-06 02:52:13.625441215 +0300
+@@ -1370,7 +1370,10 @@
+ 	else {
+ 		if (pref->vo.startsWith("vdpau")) {
+ 			proc->addArgument("-vc");
+-			proc->addArgument("ffh264vdpau,ffmpeg12vdpau,ffwmv3vdpau,ffvc1vdpau,");
++			if (pref->disable_vdpau_divx_decoder)
++				proc->addArgument("ffh264vdpau,ffmpeg12vdpau,ffwmv3vdpau,ffvc1vdpau,");
++			else
++				proc->addArgument("ffh264vdpau,ffmpeg12vdpau,ffodivxvdpau,ffwmv3vdpau,ffvc1vdpau,");
+ 		}
+ #endif	
+ 		else {
+diff -Naur old/trunk/src/preferences.cpp med/trunk/src/preferences.cpp
+--- old/trunk/src/preferences.cpp	2011-04-05 23:40:20.000000000 +0300
++++ med/trunk/src/preferences.cpp	2011-04-06 02:50:20.424847659 +0300
+@@ -106,6 +106,7 @@
+ 	turn_screensaver_off = false;
+ 	avoid_screensaver = true;
+ #else
++	disable_vdpau_divx_decoder = true;
+ 	disable_screensaver = true;
+ #endif
+ 
+@@ -541,6 +542,7 @@
+ 	set->setValue("turn_screensaver_off", turn_screensaver_off);
+ 	set->setValue("avoid_screensaver", avoid_screensaver);
+ #else
++	set->setValue("disable_vdpau_divx_decoder", disable_vdpau_divx_decoder);
+ 	set->setValue("disable_screensaver", disable_screensaver);
+ #endif
+ 
+@@ -983,6 +985,7 @@
+ 	turn_screensaver_off = set->value("turn_screensaver_off", turn_screensaver_off).toBool();
+ 	avoid_screensaver = set->value("avoid_screensaver", avoid_screensaver).toBool();
+ #else
++	disable_vdpau_divx_decoder = set->value("disable_vdpau_divx_decoder", disable_vdpau_divx_decoder).toBool();
+ 	disable_screensaver = set->value("disable_screensaver", disable_screensaver).toBool();
+ #endif
+ 
+diff -Naur old/trunk/src/preferences.h med/trunk/src/preferences.h
+--- old/trunk/src/preferences.h	2011-04-05 23:40:20.000000000 +0300
++++ med/trunk/src/preferences.h	2011-04-06 02:49:00.103997728 +0300
+@@ -97,6 +97,7 @@
+ 	bool turn_screensaver_off;
+ 	bool avoid_screensaver;
+ #else
++	bool disable_vdpau_divx_decoder;
+ 	bool disable_screensaver;
+ #endif
+ 
+diff -Naur old/trunk/src/prefgeneral.cpp med/trunk/src/prefgeneral.cpp
+--- old/trunk/src/prefgeneral.cpp	2011-04-05 23:40:20.000000000 +0300
++++ med/trunk/src/prefgeneral.cpp	2011-04-06 02:47:33.765918023 +0300
+@@ -197,6 +197,7 @@
+ 	setAvoidScreensaver( pref->avoid_screensaver );
+ 	setTurnScreensaverOff( pref->turn_screensaver_off );
+ #else
++	setDisableVdpauForDivx( pref->disable_vdpau_divx_decoder );
+ 	setDisableScreensaver( pref->disable_screensaver );
+ #endif
+ 
+@@ -276,6 +277,7 @@
+ 	pref->avoid_screensaver = avoidScreensaver();
+ 	TEST_AND_SET(pref->turn_screensaver_off, turnScreensaverOff());
+ #else
++	TEST_AND_SET(pref->disable_vdpau_divx_decoder, disableVdpauForDivx());
+ 	TEST_AND_SET(pref->disable_screensaver, disableScreensaver());
+ #endif
+ 
+@@ -714,6 +716,14 @@
+ 	return turn_screensaver_off_check->isChecked();
+ }
+ #else
++void PrefGeneral::setDisableVdpauForDivx(bool b) {
++	vdpau_divx_check->setChecked(b);
++}
++
++bool PrefGeneral::disableVdpauForDivx() {
++	return vdpau_divx_check->isChecked();
++}
++
+ void PrefGeneral::setDisableScreensaver(bool b) {
+ 	screensaver_check->setChecked(b);
+ }
+@@ -891,6 +901,10 @@
+            "mode. This option only works if the UMPlayer window is in "
+ 		   "the foreground."));
+ #else
++	setWhatsThis(vdpau_divx_check, tr("Disable vdpau for divx"),
++		tr("Not all graphics cards support vdpau DivX/XViD decoding. Check this "
++           "option, only if you are sure your card supports it.") );
++
+ 	setWhatsThis(screensaver_check, tr("Disable screensaver"),
+ 		tr("Check this option to disable the screensaver while playing.<br>"
+            "The screensaver will enabled again when play finishes.")
+diff -Naur old/trunk/src/prefgeneral.h med/trunk/src/prefgeneral.h
+--- old/trunk/src/prefgeneral.h	2011-04-05 23:40:20.000000000 +0300
++++ med/trunk/src/prefgeneral.h	2011-04-06 02:41:24.604704456 +0300
+@@ -117,6 +117,9 @@
+ 	void setTurnScreensaverOff(bool b);
+ 	bool turnScreensaverOff();
+ #else
++	void setDisableVdpauForDivx(bool b);
++	bool disableVdpauForDivx();
++
+ 	void setDisableScreensaver(bool b);
+ 	bool disableScreensaver();
+ #endif
+diff -Naur old/trunk/src/prefgeneral.ui med/trunk/src/prefgeneral.ui
+--- old/trunk/src/prefgeneral.ui	2011-04-05 23:40:20.000000000 +0300
++++ med/trunk/src/prefgeneral.ui	2011-04-06 02:38:27.368118275 +0300
+@@ -7,7 +7,7 @@
+     <x>0</x>
+     <y>0</y>
+     <width>488</width>
+-    <height>503</height>
++    <height>596</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout">
+@@ -278,6 +278,13 @@
+         </layout>
+        </item>
+        <item>
++        <widget class="QCheckBox" name="vdpau_divx_check">
++         <property name="text">
++          <string>Disable vdpau for div&amp;x</string>
++         </property>
++        </widget>
++       </item>
++       <item>
+         <widget class="Line" name="line_5">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+@@ -1181,6 +1188,7 @@
+   <tabstop>pause_if_hidden_check</tabstop>
+   <tabstop>vo_combo</tabstop>
+   <tabstop>vo_user_defined_edit</tabstop>
++  <tabstop>vdpau_divx_check</tabstop>
+   <tabstop>postprocessing_check</tabstop>
+   <tabstop>autoq_spin</tabstop>
+   <tabstop>deinterlace_combo</tabstop>

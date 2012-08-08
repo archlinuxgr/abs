@@ -1,0 +1,23 @@
+pkgname=l4ustyle2-kde4style
+_realpkgname=l4ustyle2
+pkgver=1
+pkgrel=5
+pkgdesc="A simple Qt4/KDE4 style"
+groups=('adslgr-kstyles' 'adslgr-kde4-eyecandy')
+arch=("i686" "x86_64")
+url="http://www.kde-look.org/content/show.php/l4ustyle2?content=90014"
+license=("GPL")
+depends=("qt")
+depends=('kdebase-plasma>=4.3.0')
+makedepends=("cmake" "automoc4" "gcc")
+conflicts=("l4ustyle2-kde4")
+source=('http://www.kde-look.org/CONTENT/content-files/90014-l4ustyle2.tar.gz')
+md5sums=('5514356db045324c922fe9e6ca3c77f9')
+
+build() {
+	cd ${srcdir}/$_realpkgname/
+        cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release . 
+        make
+	make DESTDIR=$pkgdir install
+}
+

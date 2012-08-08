@@ -1,0 +1,26 @@
+# Contributor: WAntilles <wantilles@adslgr.com>
+
+pkgname=nettop
+pkgver=0.2.3
+pkgrel=3
+pkgdesc="A program which looks like top, but is for network packets."
+arch=('i686' 'x86_64')
+url="http://srparish.net/scripts/"
+license=('BSD')
+depends=('slang' 'libpcap')
+source=(http://srparish.net/scripts/${pkgname}-${pkgver}.tar.gz
+	nettop-0.2.3-compile.patch)
+md5sums=('e76602717e79a26b0ab15ab6799fb1ef'
+	 '49a7768aeb22df656947448b5ef6e734')
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  patch -Np0 -i "${srcdir}/nettop-0.2.3-compile.patch"
+
+  install -d "${pkgdir}/usr/bin"
+
+  ./configure --prefix=/usr --sysconfdir=/etc/nettop
+  make
+  make prefix="${pkgdir}/usr" install
+}
+

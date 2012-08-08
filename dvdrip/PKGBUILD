@@ -1,0 +1,34 @@
+# $Id: PKGBUILD,v 1.37 2007/06/11 23:29:12 tobias Exp $
+# Contributor: Fredrik Hammar <Horney_C86@Hotmail.com>
+# Maintainer: tobias <tobias@archlinux.org>
+
+pkgname=dvdrip
+pkgver=0.98.6
+pkgrel=2
+pkgdesc="A Gtk frontend for transcode writen in Perl"
+arch=(i686 x86_64)
+url="http://www.exit1.org/dvdrip/"
+install=${pkgname}.install
+depends=('glibc' 'perl-gtk2-ex-formfactory' 'transcode' 'imagemagick'
+         'perl-libintl-perl' 'desktop-file-utils' 'perl-event-execflow')
+source=(http://www.exit1.org/dvdrip/dist/${pkgname}-${pkgver}.tar.gz \
+        ${pkgname}.desktop)
+md5sums=('012698a2a1582b7eb5be13885d5a5e84' '9c5b347c2e0ae847d0e7abb3cf54bad3')
+
+build() {
+  export MAKEFLAGS="-j1"
+  cd ${srcdir}/${pkgname}-${pkgver}
+   # workaround a workaround that works around the RH specific NPTL handling
+  sed -i 's:2\.2\.5:2.4:' lib/Video/DVDRip/Config.pm
+  perl Makefile.PL
+  make
+
+# make test is broken in a chroot
+# make test
+
+  make install DESTDIR=${pkgdir}
+  rm ${pkgdir}/usr/lib/perl5/?.?.?/${CARCH}-linux-thread-multi/perllocal.pod
+  mv ${pkgdir}/usr/lib/perl5/site_perl/?.?.? ${pkgdir}/usr/lib/perl5/site_perl/current
+  rm ${pkgdir}/usr/lib/perl5/site_perl/current/${CARCH}-linux-thread-multi/auto/Video/DVDRip/.packlist
+  install -Dm644 ../${pkgname}.desktop ${pkgdir}/usr/share/applications/${pkgname}.desktop
+}

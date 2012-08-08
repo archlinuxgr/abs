@@ -1,0 +1,38 @@
+# Contributor: ranger @ adslgr.com
+
+pkgname=sysinfo-kioslave-svn
+pkgver=108
+pkgrel=2
+pkgdesc="KIO Sysinfo is a KDE IO Slave, sysinfo:/, used for the 'My Computer' icon on openSUSE desktops."
+arch=('i686' 'x86_64')
+url="http://en.opensuse.org/KIO_Sysinfo"
+license=('GPL')
+depends=('kdelibs' 'hwinfo' 'automoc4')
+makedepends=('subversion' 'cmake')
+provides=('kio-sysinfo')
+conflicts=('kio-sysinfo' 'kio-sysinfo-svn')
+replaces=('kio-sysinfo' 'kio-sysinfo-svn')
+source=('background_arch.png' 'inner-bcg_arch.png' 'sysinfo.cpp.patch')
+md5sums=('ab401cd78427139e119785b37adb5368' '3d7e8f0cfb14a7b13035961ebedb4711' 'd8742350ac19675a26cfe8692444aac7')
+
+_svntrunk=http://svn.opensuse.org/svn/kio_sysinfo/trunk
+_svnmod=kio_sysinfo
+
+build() {
+  cd ${srcdir}/
+  svn co ${_svntrunk} --config-dir ./ -r ${pkgver} ${_svnmod}
+  msg "SVN checkout done or server timeout"
+  msg "Starting make..."
+  
+  sed -i "s|readFromFile( \"/etc/SuSE-release\" )|\"Arch Linux (${CARCH})\"|g" ${_svnmod}/src/sysinfo.cpp
+  mkdir ${srcdir}/${_svnmod}/build
+  cd ${startdir}/
+  patch -p0 < sysinfo.cpp.patch
+  cd ${srcdir}/${_svnmod}/build
+  cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+  make
+  make DESTDIR="${pkgdir}" install
+  
+  install -m644 ${srcdir}/background_arch.png ${pkgdir}/usr/share/apps/sysinfo/about/images/background.png
+  install -m644 ${srcdir}/inner-bcg_arch.png ${pkgdir}/usr/share/apps/sysinfo/about/images/inner-bcg.png
+}

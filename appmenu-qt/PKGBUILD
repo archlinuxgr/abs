@@ -1,0 +1,26 @@
+#Maintainer: Flamelab <panosfilip@gmail.com>
+
+pkgname=appmenu-qt
+pkgbranch=trunk
+pkgver=0.1.2
+pkgrel=2
+pkgdesc="Application menu module for Qt"
+arch=('i686' 'x86_64')
+url="https://launchpad.net/appmenu-qt"
+license=('GPL')
+depends=('libdbusmenu-qt>=0.7.0' 'qt')
+makedepends=('cmake' 'automoc4')
+source=(http://launchpad.net/${pkgname}/${pkgbranch}/${pkgver}/+download/${pkgname}-${pkgver}.tar.bz2)
+
+build() {
+   cd "${srcdir}/${pkgname}-${pkgver}"
+   cmake . -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`
+   make
+}
+
+package() {
+   cd "${srcdir}/${pkgname}-${pkgver}"
+   make DESTDIR="${pkgdir}" install
+}
+
+sha256sums=('0df35d107f1daa539fe1255bd92bbf3cfe54f9f188623d9b5fff6014f5c1de1e')

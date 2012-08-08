@@ -1,0 +1,22 @@
+# Contributor: ranger @ adslgr.com
+pkgname=toggle-compositing-plasmoid
+realname=toggle-compositing
+pkgver=0.2.3
+pkgrel=3
+pkgdesc="A button allows you to switch beetween KWin's compositing and traditional mode"
+groups=('adslgr-plasmoids')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org:80/content/show.php?content=78299"
+depends=('kdebase-workspace>=4.3.0')
+makedepends=('cmake' 'automoc4' 'gcc')
+source=("http://ivplasma.googlecode.com/files/${realname}-${pkgver}.tar.gz")
+license=('GPL')
+md5sums=('c811dd4d9842d1628b748e01855357b5')
+
+
+build() {
+  cd $srcdir/${realname}
+	cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE
+	make VERBOSE=1
+        make DESTDIR=$pkgdir install
+}

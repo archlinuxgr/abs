@@ -1,0 +1,21 @@
+#Contributor: ranger @ adslgr.com
+pkgname=carbon-plasmatheme
+realname=Carbon
+pkgver=1.1
+pkgrel=1
+pkgdesc="A a plasma theme inspired by the idea from carbon bodywork"
+groups=('adslgr-kde4-eyecandy' 'adslgr-kthemes')
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/Oxyglass?content=107252"
+depends=('kdebase-workspace>=4.2.0')
+source=("http://www.kde-look.org/CONTENT/content-files/107252-${realname}.tar.gz")
+license=('GPL')
+md5sums='544bb91ad89a1169f2724c5d2f9ad4ba'
+
+build()
+{
+  mkdir -p $pkgdir/usr/share/apps/desktoptheme
+  cd $srcdir
+  cp -R ${realname} $pkgdir/usr/share/apps/desktoptheme
+}
+

@@ -1,0 +1,27 @@
+# Maintainer: rangergr@archlinux.gr
+
+pkgname=yawp-plasmoid 
+realname=yawp
+pkgver=0.3.6
+pkgrel=1
+pkgdesc="Yet Another Weather Plasmoid" 
+groups=('adslgr-plasmoids')
+arch=('i686' 'x86_64') 
+url="http://www.kde-look.org/content/show.php?content=94106" 
+depends=('kdebase-workspace>=4.6.0' 'gettext') 
+makedepends=('cmake' 'automoc4') 
+source=("http://downloads.sourceforge.net/${realname}/${realname}-${pkgver}.tar.bz2")
+license=('GPL') 
+
+build() {
+  cd $srcdir/$realname-$pkgver
+
+  mkdir build
+  cd build
+  cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` ..
+
+  make VERBOSE=1
+  make DESTDIR=$pkgdir install
+}
+
+md5sums=('d64c6d528e3ba7b7afba63e6670211c8')

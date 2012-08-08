@@ -1,0 +1,21 @@
+# Contributor: WAntilles <wantilles@adslgr.com>
+
+pkgname=aften
+pkgver=0.0.8
+pkgrel=1
+pkgdesc="Audio encoder which generates compressed audio streams based on ATSC A/52 specification."
+arch=('i686' 'x86_64')
+url="http://aften.sourceforge.net/"
+license=('GPL')
+source=("http://downloads.sourceforge.net/aften/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('fde67146879febb81af3d95a62df8840')
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  mkdir default
+  cd default
+  cmake .. -DCMAKE_INSTALL_PREFIX:STRING="/usr" -DSHARED=true
+  make
+  make install DESTDIR=${pkgdir}/
+}
+

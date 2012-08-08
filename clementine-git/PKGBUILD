@@ -1,0 +1,55 @@
+# Contributor: Adria Arrufat <swiftscythe@gmail.com>
+# Contributor: Ike Devolder <ike.devolder@gmail.com>
+# Contributor: Daniel Hill <daniel.hill@orcon.net.nz>
+# Archlinuxgr Maintainer: Axilleas P <axilleas archlinux gr>
+
+pkgname=clementine-git
+pkgver=20111228
+pkgrel=1
+pkgdesc="A modern music player and library organiser and a port of Amarok 1.4, with some features rewritten to take advantage of Qt4."
+arch=('i686' 'x86_64')
+url="http://code.google.com/p/clementine-player/"
+license=('GPL')
+depends=('gettext' 'gstreamer0.10-base' 'liblastfm' 'qt' 'taglib' 'glew' 'hicolor-icon-theme' 'qjson')
+optdepends=('gstreamer0.10-plugins: for more open formats'
+		'libgpod: for iPod support'
+		'libimobiledevice: for iPod support'
+		'libplist: for iPod support'
+		'usbmuxd: for iPod support'
+		'libmtp: for MTP support'
+		'libgio: for various device support'
+		'libcdio: for CD support'
+		'protobuf: for Spotify support'
+		'libspotify: for Spotify support'
+		'libqca: for Spotify support') 
+makedepends=('git' 'boost' 'cmake' 'mesa')
+provides=('clementine')
+conflicts=('clementine')
+source=()
+md5sums=()
+
+_gitroot="https://code.google.com/p/clementine-player/"
+_gitname="clementine"
+
+build() {
+  cd "$srcdir"
+  msg "Connecting to GIT server...."
+
+  if [ -d $_gitname ] ; then
+    cd $_gitname && git pull origin
+    msg "The local files are updated."
+  else
+    git clone $_gitroot $_gitname
+  fi
+
+  msg "GIT checkout done or server timeout"
+  msg "Starting make..."
+
+  rm -rf "$srcdir/$_gitname-build"
+  git clone "$srcdir/$_gitname" "$srcdir/$_gitname-build"
+  cd "${srcdir}/$_gitname-build"
+  
+	cmake -DCMAKE_INSTALL_PREFIX=/usr -DBUILDBOT_REVISION=$pkgver
+	make && make DESTDIR=${pkgdir} install ;  
+      
+  }

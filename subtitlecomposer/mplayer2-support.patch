@@ -1,0 +1,209 @@
+diff -Naur old/subtitlecomposer-0.5.3/src/player/mplayer/mplayerbackend.cpp new/subtitlecomposer-0.5.3/src/player/mplayer/mplayerbackend.cpp
+--- old/subtitlecomposer-0.5.3/src/player/mplayer/mplayerbackend.cpp	2009-02-26 00:46:17.000000000 +0200
++++ new/subtitlecomposer-0.5.3/src/player/mplayer/mplayerbackend.cpp	2011-03-31 08:50:44.000000000 +0300
+@@ -168,47 +168,59 @@
+ 	return true;
+ }
+ 
+-
+ bool MPlayerBackend::seek( double seconds, bool accurate )
+ {
++
+ 	if ( accurate )
+ 	{
+-		bool wasPaused = m_player->isPaused();
+-		bool wasMuted = m_player->isMuted();
++		if ( m_process->usingMplayer2() )
++		{
++			m_reportUpdates = false;
++			m_process->sendSeek( seconds );
++			m_reportUpdates = true;
++
++			m_player->updatePosition( m_position );
++		}
++		else
++		{
++			bool wasPaused = m_player->isPaused();
++			bool wasMuted = m_player->isMuted();
+ 
+-		m_reportUpdates = false;
++			m_reportUpdates = false;
+ 
+-		if ( ! wasPaused )
+-			m_process->sendTogglePause();
++			if ( ! wasPaused )
++				m_process->sendTogglePause();
+ 
+-		if ( ! wasMuted )
+-			m_process->sendToggleMute();
++			if ( ! wasMuted )
++				m_process->sendToggleMute();
+ 
+-		double seekPosition = seconds;
+-		do
+-		{
+-			m_process->sendSeek( seekPosition );
++			double seekPosition = seconds;
+ 
+-			if ( seekPosition > 0.0 )
++			do
+ 			{
+-				seekPosition -= 1.0;
+-				if ( seekPosition < 0.0 )
+-					seekPosition = 0.0;
++				m_process->sendSeek( seekPosition );
++
++				if ( seekPosition > 0.0 )
++				{
++					seekPosition -= 1.0;
++					if ( seekPosition < 0.0 )
++						seekPosition = 0.0;
++				}
++				else
++					break;
+ 			}
+-			else
+-				break;
+-		}
+-		while ( m_position > seconds );
++			while ( m_position > seconds );
+ 
+-		if ( ! wasMuted )
+-			m_process->sendToggleMute();
++			if ( ! wasMuted )
++				m_process->sendToggleMute();
+ 
+-		if ( ! wasPaused )
+-			m_process->sendTogglePause();
++			if ( ! wasPaused )
++				m_process->sendTogglePause();
+ 
+-		m_reportUpdates = true;
++			m_reportUpdates = true;
+ 
+-		m_player->updatePosition( m_position );
++			m_player->updatePosition( m_position );
++		}
+ 	}
+ 	else
+ 		m_process->sendFastSeek( seconds );
+diff -Naur old/subtitlecomposer-0.5.3/src/player/mplayer/mplayerconfig.h new/subtitlecomposer-0.5.3/src/player/mplayer/mplayerconfig.h
+--- old/subtitlecomposer-0.5.3/src/player/mplayer/mplayerconfig.h	2011-03-31 01:30:54.000000000 +0300
++++ new/subtitlecomposer-0.5.3/src/player/mplayer/mplayerconfig.h	2011-03-31 05:19:22.000000000 +0300
+@@ -42,6 +42,9 @@
+ 			QString executablePath() const { return option( keyExecutablePath() ); }
+ 			void setExecutablePath( const QString& execPath ) { setOption( keyExecutablePath(), execPath ); }
+ 
++			bool useMplayer2() const { return optionAsBool( keyUseMplayer2() ); }
++			void setUseMplayer2( bool useMplayer2 ) { setOption( keyUseMplayer2(), useMplayer2 ); }
++
+ 			bool hasAudioOutput() const { return ! option( keyAudioOutput() ).isEmpty(); }
+ 			QString audioOutput() const { return option( keyAudioOutput() ); }
+ 			void setAudioOutput( const QString& audioOutput ) { setOption( keyAudioOutput(), audioOutput ); }
+@@ -76,6 +79,7 @@
+ 
+ 
+ 			static const QString& keyExecutablePath() { static const QString key( "ExecutablePath" ); return key; }
++			static const QString& keyUseMplayer2() { static const QString key( "UseMplayer2" ); return key; }
+ 			static const QString& keyAudioOutput() { static const QString key( "AudioOutput" ); return key; }
+ 			static const QString& keyVideoOutput() { static const QString key( "VideoOutput" ); return key; }
+ 			static const QString& keyCacheSize() { static const QString key( "CacheSize" ); return key; }
+@@ -96,6 +100,7 @@
+ 				QMap<QString,QString> defaults;
+ 
+ 				defaults[keyExecutablePath()] = "mplayer";
++				defaults[keyUseMplayer2()] = "false";
+ 				defaults[keyAudioOutput()] = "";
+ 				defaults[keyVideoOutput()] = "";
+ 
+diff -Naur old/subtitlecomposer-0.5.3/src/player/mplayer/mplayerconfigwidget.cpp new/subtitlecomposer-0.5.3/src/player/mplayer/mplayerconfigwidget.cpp
+--- old/subtitlecomposer-0.5.3/src/player/mplayer/mplayerconfigwidget.cpp	2011-03-31 01:30:54.000000000 +0300
++++ new/subtitlecomposer-0.5.3/src/player/mplayer/mplayerconfigwidget.cpp	2011-03-31 05:28:10.000000000 +0300
+@@ -43,6 +43,8 @@
+  	m_pathUrlRequester->setWindowTitle( i18n( "Select the MPlayer executable" ) );
+ 	m_pathUrlRequester->setMode( KFile::File|KFile::ExistingOnly|KFile::LocalOnly );
+ 	m_pathUrlRequester->setUrl( KUrl( "mplayer" ) );
++	m_useMplayer2CheckBox = new QCheckBox( generalGroupBox );
++	m_useMplayer2CheckBox->setText( i18n( "I am using MPlayer2" ) );
+ 
+ 	QGroupBox* videoGroupBox = createGroupBox( i18nc( "@title:group Video settings", "Video" ) );
+ 
+@@ -89,6 +91,7 @@
+ 	QGridLayout* generalLayout = createGridLayout( generalGroupBox );
+ 	generalLayout->addWidget( pathLabel, 0, 0, Qt::AlignRight|Qt::AlignVCenter );
+ 	generalLayout->addWidget( m_pathUrlRequester, 0, 1 );
++	generalLayout->addWidget( m_useMplayer2CheckBox, 1, 0, 1, 2 );
+ 
+ 	QGridLayout* videoLayout = createGridLayout( videoGroupBox );
+ 	videoLayout->addWidget( m_videoOutputCheckBox, 0, 0, Qt::AlignRight|Qt::AlignVCenter );
+@@ -117,6 +120,7 @@
+ 	connect( m_vdpauDivxCheckBox, SIGNAL( toggled(bool) ), this, SIGNAL( settingsChanged() ) );
+ 	connect( m_frameDropCheckBox, SIGNAL( toggled(bool) ), this, SIGNAL( settingsChanged() ) );
+ 	connect( m_hardFrameDropCheckBox, SIGNAL( toggled(bool) ), this, SIGNAL( settingsChanged() ) );
++	connect( m_useMplayer2CheckBox, SIGNAL( toggled(bool) ), this, SIGNAL( settingsChanged() ) );
+ 	connect( m_audioOutputComboBox, SIGNAL( textChanged(const QString&) ), this, SIGNAL( settingsChanged() ) );
+ 	connect( m_avsyncSpinBox, SIGNAL( valueChanged(int) ), this, SIGNAL( settingsChanged() ) );
+ 	connect( m_videoOutputComboBox, SIGNAL( textChanged(const QString&) ), this, SIGNAL( settingsChanged() ) );
+@@ -132,6 +136,7 @@
+ {
+ 	config()->setExecutablePath( m_pathUrlRequester->url().path() );
+ 
++	config()->setUseMplayer2( m_useMplayer2CheckBox->isChecked() );
+ 	config()->setAudioOutput( m_audioOutputCheckBox->isChecked() ? m_audioOutputComboBox->currentText() : QString() );
+ 	config()->setVolumeNormalizationEnabled( m_volumeNormalizationCheckBox->isChecked() );
+ 	config()->setAutoSyncFactor( m_avsyncCheckBox->isChecked() ? m_avsyncSpinBox->value() : -1 );
+@@ -163,6 +168,7 @@
+ 	m_vdpauDivxCheckBox->setChecked( config()->vdpauDivx() );
+ 	m_frameDropCheckBox->setChecked( config()->frameDropping() );
+ 	m_hardFrameDropCheckBox->setChecked( config()->hardFrameDropping() );
++	m_useMplayer2CheckBox->setChecked( config()->useMplayer2() );
+ }
+ 
+ #include "mplayerconfigwidget.moc"
+diff -Naur old/subtitlecomposer-0.5.3/src/player/mplayer/mplayerconfigwidget.h new/subtitlecomposer-0.5.3/src/player/mplayer/mplayerconfigwidget.h
+--- old/subtitlecomposer-0.5.3/src/player/mplayer/mplayerconfigwidget.h	2011-03-31 01:30:54.000000000 +0300
++++ new/subtitlecomposer-0.5.3/src/player/mplayer/mplayerconfigwidget.h	2011-03-31 05:20:57.000000000 +0300
+@@ -58,6 +58,7 @@
+ 			QCheckBox* m_vdpauDivxCheckBox;
+ 			QCheckBox* m_frameDropCheckBox;
+ 			QCheckBox* m_hardFrameDropCheckBox;
++			QCheckBox* m_useMplayer2CheckBox;
+ 			KComboBox* m_videoOutputComboBox;
+ 			QCheckBox* m_videoOutputCheckBox;
+ 			KComboBox* m_audioOutputComboBox;
+diff -Naur old/subtitlecomposer-0.5.3/src/player/mplayer/mplayerprocess.cpp new/subtitlecomposer-0.5.3/src/player/mplayer/mplayerprocess.cpp
+--- old/subtitlecomposer-0.5.3/src/player/mplayer/mplayerprocess.cpp	2011-03-31 01:30:54.000000000 +0300
++++ new/subtitlecomposer-0.5.3/src/player/mplayer/mplayerprocess.cpp	2011-03-31 07:34:12.000000000 +0300
+@@ -58,6 +58,11 @@
+ 	return m_mediaData;
+ }
+ 
++bool MPlayerProcess::usingMplayer2()
++{
++	return m_config->useMplayer2();
++}
++
+ bool MPlayerProcess::start( const QString& filePath, int winId, int audioStream, int audioStreamCount )
+ {
+ 	if ( KStandardDirs::findExe( m_config->executablePath() ).isEmpty() )
+@@ -80,7 +85,7 @@
+ 	args << "-slave"; // enable slave mode so we can sent commands to mplayer process
+ 
+ 	if ( m_config->hasVideoOutput() )
+-	{	
++	{
+ 		args << "-vo" << m_config->videoOutput();
+ 		if ( m_config->videoOutput() == "vdpau" )
+ 		{
+diff -Naur old/subtitlecomposer-0.5.3/src/player/mplayer/mplayerprocess.h new/subtitlecomposer-0.5.3/src/player/mplayer/mplayerprocess.h
+--- old/subtitlecomposer-0.5.3/src/player/mplayer/mplayerprocess.h	2009-02-26 00:46:17.000000000 +0200
++++ new/subtitlecomposer-0.5.3/src/player/mplayer/mplayerprocess.h	2011-03-31 07:33:23.000000000 +0300
+@@ -51,6 +51,8 @@
+ 
+ 			const MediaData& mediaData();
+ 
++			bool usingMplayer2();
++
+ 			/** returns false only if the executable couldn't be found (in which case the process could not be started) */
+ 			bool start( const QString& filePath, int winId, int audioStream=-1, int audioStreamCount=1 );
+ 

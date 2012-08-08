@@ -1,0 +1,24 @@
+post_install(){
+        echo ">>> ATTENTION: <<The Archlinux Greece>> project abs is downloaded"
+        echo ">>> from in /var/abs/local"
+        echo ">>> Make sure to use the script as root."
+    
+    
+    if [ ! -d /var/abs/local ];then 
+       mkdir -p /var/abs/local
+    fi
+     
+    if [ -d /var/abs/arch-linux-greece ];then
+        echo "::: Deleting the previous location of the Archlinux Greece abs tree... :::"
+        rm -r /var/abs/arch-linux-greece
+        if [ ! -d /var/abs/arch-linux-greece ];then
+          echo "::: Done :::"
+        fi
+    fi
+   
+	/bin/true
+}
+
+post_upgrade() {
+	post_install
+}
