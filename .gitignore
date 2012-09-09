@@ -1,3 +1,6 @@
 *.gz
 *.xz
 *.log
+*vbox-extpack
+pkg/
+src/
