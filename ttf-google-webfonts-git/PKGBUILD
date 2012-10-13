@@ -1,0 +1,72 @@
+# Maintainer : Axilleas Pipinellis <axilleas archlinux gr>
+# Contributor: Daniel Micay <danielmicay@gmail.com>
+# Contributor: Michalis Georgiou <mechmg93@gmail.comr>
+# Contributor: Alexander De Sousa <archaur.xandy21@spamgourmet.com>
+
+pkgname=ttf-google-webfonts-git
+pkgver=20121013
+pkgrel=1
+pkgdesc="Various TrueType fonts from Google Webfonts Project."
+arch=('any')
+url="http://code.google.com/webfonts"
+license=('various')
+depends=('fontconfig' 'xorg-fonts-encodings')
+makedepends=('git')
+conflicts=(
+           'ttf-google-webfonts-hg'
+           'jsmath-fonts'
+           'lohit-fonts'
+           'oldstand-font'
+           'otf-goudy'
+           'ttf-andika'
+           'ttf-anonymous-pro'
+           'ttf-cantarell'
+           'ttf-cardo'
+           'ttf-chromeos-fonts'
+           'ttf-droid'
+           'ttf-google-webfonts-hg'
+           'ttf-inconsolata'
+           'ttf-kimberly_geswein_print'
+           'ttf-nova'
+           'ttf-oldstandard'
+           'ttf-pt-mono'
+           'ttf-pt-sans'
+           'ttf-ptsans'
+           'ttf-roboto'
+           'ttf-sil-fonts'
+           'ttf-sortsmillgoudy'
+           'ttf-source-code-pro'
+           'ttf-source-sans-pro'
+           'ttf-ubuntu-font-family'
+           'ttf-vollkorn')
+replaces=('ttf-google-webfonts')
+install=ttf.install
+source=()
+
+_gitroot="git@github.com:axilleas/googlefonts.git"
+_gitname="googlefonts"
+
+build() {
+    cd ${srcdir}/
+
+    msg "Connecting to the GIT server...."
+    if [[ -d ${srcdir}/${_gitname} ]] ; then
+    	cd ${_gitname}
+    	git pull origin
+    	msg "The local files are updated..."
+    else
+    	git clone --depth=1 ${_gitroot}
+    fi
+    
+    msg "GIT checkout done."
+
+    msg "Starting build for: ${pkgname}"
+
+}
+
+package() {
+  cd "$srcdir/$_gitname"
+  install -dm755 "$pkgdir/usr/share/fonts/TTF"
+  find . -type f -name \*.ttf -exec install -Dm644 '{}' \
+    "$pkgdir/usr/share/fonts/TTF" \;
+}
