@@ -4,13 +4,13 @@
 # Archlinuxgr Maintainer: Axilleas P <axilleas archlinux gr>
 
 pkgname=clementine-git
-pkgver=20111228
+pkgver=20121007
 pkgrel=1
 pkgdesc="A modern music player and library organiser and a port of Amarok 1.4, with some features rewritten to take advantage of Qt4."
 arch=('i686' 'x86_64')
 url="http://code.google.com/p/clementine-player/"
 license=('GPL')
-depends=('gettext' 'gstreamer0.10-base' 'liblastfm' 'qt' 'taglib' 'glew' 'hicolor-icon-theme' 'qjson')
+depends=('gstreamer0.10-base-plugins' 'liblastfm' 'qt' 'taglib' 'glew' 'hicolor-icon-theme' 'qjson')
 optdepends=('gstreamer0.10-plugins: for more open formats'
 		'libgpod: for iPod support'
 		'libimobiledevice: for iPod support'
