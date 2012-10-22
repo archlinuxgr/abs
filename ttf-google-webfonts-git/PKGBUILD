@@ -4,7 +4,7 @@
 # Contributor: Alexander De Sousa <archaur.xandy21@spamgourmet.com>
 
 pkgname=ttf-google-webfonts-git
-pkgver=20121013
+pkgver=20121022
 pkgrel=1
 pkgdesc="Various TrueType fonts from Google Webfonts Project."
 arch=('any')
