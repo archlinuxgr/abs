@@ -1,12 +1,12 @@
 # Contributor:  ranger <rangergr@archlinux.gr>
 pkgname=pysmssend
 pkgver=1.45
-pkgrel=5
+pkgrel=6
 pkgdesc="Application for sending SMS over the Internet"
 arch=('any')
 url="http://pysmssend.silverarrow.org/"
 license=('GPL3')
-depends=('python-mechanize' 'python2-qt')
+depends=('python2-mechanize' 'python2-qt' 'python2')
 makedepends=('patch')
 source=("http://pysmssend.silverarrow.org/files/${pkgname}-${pkgver}.tar.gz" \
         $pkgname-desktop.diff)
