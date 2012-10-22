@@ -1,0 +1,64 @@
+# Maintainer: Det <nimetonmaili at gmail a-dot com>
+# Contributors: 458italia <svenskaparadox@gmail.com>, Madek <gonzaloseguel@gmail.com>, Berseker <berseker86@gmail.com>
+
+pkgname=google-earth
+pkgver=6.2.2.6613
+pkgrel=1
+pkgdesc="A 3D interface to view satellite images of Earth and other objects"
+arch=('i686' 'x86_64')
+url="http://earth.google.com"
+license=('custom')
+depends=('desktop-file-utils' 'hicolor-icon-theme' 'ld-lsb' 'lib32-fontconfig' 'lib32-gcc-libs' 'lib32-libsm' 'lib32-libxrender' 'lib32-mesa' 'shared-mime-info')
+optdepends=('lib32-ati-dri: 3D support for the open source ATI driver'
+            'lib32-catalyst-utils: 3D support for ATI/AMD cards'
+            'lib32-gtk2: SCIM support'
+            'lib32-intel-dri: 3D support for Intel cards'
+            'lib32-nouveau-dri: 3D support for the open source Nouveau driver'
+            'lib32-nss-mdns: In case the application fails to contact the servers'
+            'lib32-nvidia-utils: 3D support for Nvidia cards'
+            'qt: For changing the font size with qtconfig'
+            'ttf-ms-fonts: Fonts')
+options=('!emptydirs')
+install=$pkgname.install
+source=($pkgname-stable-$pkgver-i386.deb::http://dl.google.com/dl/earth/client/current/$pkgname-stable_current_i386.deb
+        $url/intl/en/license.html
+        $pkgname-mimetypes.xml)
+md5sums=('b499eaa4ae6c67f25c2b051682c3f153'
+         '7363c6144ebb298b1d7aec713ca8a82a'
+         'e3c67b8d05c3de50535bd7e45eee728e')
+[[ "$CARCH" == "x86_64" ]] && source[0]=$pkgname-stable-$pkgver-amd64.deb::http://dl.google.com/dl/earth/client/current/$pkgname-stable_current_amd64.deb
+
+if [[ "$CARCH" == "i686" ]]; then
+  depends=('desktop-file-utils' 'fontconfig' 'hicolor-icon-theme' 'ld-lsb' 'libsm' 'libxrender' 'mesa' 'shared-mime-info')
+  optdepends=('ati-dri: 3D support for the open source ATI driver'
+              'catalyst-utils: 3D support for ATI/AMD cards'
+              'gtk2: SCIM support'
+              'intel-dri: 3D support for Intel cards'
+              'nouveau-dri: 3D support for the open source Nouveau driver'
+              'nss-mdns: In case the application fails to contact the servers'
+              'nvidia-utils: 3D support for Nvidia cards'
+              'qt: For changing the font size with qtconfig'
+              'ttf-ms-fonts: Fonts')
+  md5sums[0]='4db675d7e86b1643825210d8d94602bd'
+fi
+_instdir=/opt/google/earth/free
+
+PKGEXT=".pkg.tar"
+
+package() {
+  msg2 "Extracting the data.tar.lzma"
+  bsdtar -xf data.tar.lzma -C "$pkgdir/"
+
+  msg2 "Installing the .desktop file, the shared MIME info package, icons and the license"
+  mv "$pkgdir/$_instdir/$pkgname.desktop" "$pkgdir/usr/share/applications/"
+  install -Dm644 $pkgname-mimetypes.xml "$pkgdir/usr/share/mime/packages/$pkgname-mimetypes.xml"
+
+  for i in 16 22 24 32 48 64 128 256; do
+    install -Dm644 "$pkgdir/$_instdir/product_logo_${i}.png" "$pkgdir/usr/share/icons/hicolor/${i}x${i}/apps/$pkgname.png"
+  done
+
+  install -Dm644 license.html "$pkgdir/usr/share/licenses/$pkgname/license.html"
+
+  msg2 "Removing the Debian-intended cron job and duplicated images"
+  rm "$pkgdir"/etc/cron.daily/$pkgname "$pkgdir"/opt/google/earth/free/product_logo_*.png
+}

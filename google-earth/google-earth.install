@@ -1,0 +1,26 @@
+_update(){
+    echo "Updating icon cache"
+    xdg-icon-resource forceupdate --theme hicolor &> /dev/null
+    echo "Updating mime database..."
+    update-mime-database usr/share/mime > /dev/null
+    echo "Updating desktop mime database..."
+    update-desktop-database -q
+}
+
+post_install() {
+    _update
+    echo ""
+    echo "NOTE: The binary is called 'google-earth'"
+    echo "NOTE2: To prevent a crash on startup with -dri drivers"
+    echo "you may need to add a new line to ~/.drirc with:"
+    echo "echo >> ~/.drirc"
+    echo ""
+}
+
+post_upgrade() {
+    post_install
+}
+
+post_remove() {
+    _update
+}
