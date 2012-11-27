@@ -1,4 +1,4 @@
-#Maintainer: Dave Reisner <d@falconindy.com>
+# Maintainer: Dave Reisner <d@falconindy.com>
 
 pkgname=cower
 pkgver=7
